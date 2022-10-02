@@ -11,7 +11,7 @@ vRadial = r*v/rNorm;
 
 %% ANGULAR MOMENTUM
 h = cross(r,v);
-hNorm = sqrt(h*h);
+hNorm = sqrt(h*h); % Prodotto vettoriale
 
 %% INCLINATION
 i = acos(hNorm*kDir/hNorm);
