@@ -27,7 +27,7 @@ rNorm = norm(r);
 vNorm = norm(v);
 % vRadial = r*v/rNorm; % Non necessari
 
-%% SIZE
+%% SEMI - MAJOR AXIS
 a = (2/rNorm - vNorm^2/mu).^(-1);
 
 %% ANGULAR MOMENTUM
@@ -45,21 +45,21 @@ i = acos(hNorm*kDir/hNorm);
 n = cross(kDir,h) / norm (cross(kDir,h));
 nNorm = norm(n);
 
-%% RIGHT ASCENSION OF THE ASCENDING NODE
+%% RIGHT ASCENSION OF THE ASCENDING NODE - LONGITUDE OF ASCENDING NODE
 if nNorm*jDir >= 0 % Condizioni da sistemare
     Omega = acos(nNorm*iDir./nNorm);
 else 
     Omega = 2*pi - acos(nNorm*iDir./nNorm);
 end
 
-%% ARGUMENT OF PERIGEE
+%% ARGUMENT OF PERIAPSIS
 if eNorm*nNorm >= 0 % Ste condizioni sono da sistemare
     omega = acos(dot(e,n) / eNorm);
 else 
     omega = 2*pi - acos(dot(e,n) / eNorm);
 end
 
-%% REAL ANOMALY
+%% MEAN ANOMALY
 if rNorm*eNorm >= 0  % Anche queste porcozzi
     theta = acos(dot(r,n) / (rNorm*eNorm));
 else 
