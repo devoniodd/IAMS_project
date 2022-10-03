@@ -1,4 +1,4 @@
-function [a,e,i,Omega,omega,theta] = rvToOrbital(r,v,mu,degrees)
+function [a,e,h,i,Omega,omega,theta] = rvToOrbital(r,v,mu,degrees)
 % Description - TBA
 
 %% VALUE CHECK
@@ -28,7 +28,7 @@ vNorm = norm(v);
 % vRadial = r*v/rNorm; % Non necessari
 
 %% SEMI - MAJOR AXIS
-a = (2/rNorm - vNorm^2/mu).^(-1);
+a = 1/(2/rNorm - vNorm^2/mu);
 
 %% ANGULAR MOMENTUM
 h = cross(r,v);
@@ -47,9 +47,9 @@ nNorm = norm(n);
 
 %% RIGHT ASCENSION OF THE ASCENDING NODE - LONGITUDE OF ASCENDING NODE
 if nNorm*jDir >= 0 % Condizioni da sistemare
-    Omega = acos(nNorm*iDir./nNorm);
+    Omega = acos( dot(n,iDir) / nNorm);
 else 
-    Omega = 2*pi - acos(nNorm*iDir./nNorm);
+    Omega = 2*pi - acos( dot(n,iDir) / nNorm);
 end
 
 %% ARGUMENT OF PERIAPSIS
