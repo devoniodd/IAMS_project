@@ -49,28 +49,28 @@ nNorm = norm(n);
 if nNorm*jDir >= 0 % Condizioni da sistemare
     Omega = acos(nNorm*iDir./nNorm);
 else 
-    Omega = 360 - acos(nNorm*iDir./nNorm);
+    Omega = 2*pi - acos(nNorm*iDir./nNorm);
 end
 
 %% ARGUMENT OF PERIGEE
 if eNorm*nNorm >= 0 % Ste condizioni sono da sistemare
     omega = acos(dot(e,n) / eNorm);
 else 
-    omega = 360 - acos(dot(e,n) / eNorm);
+    omega = 2*pi - acos(dot(e,n) / eNorm);
 end
 
 %% REAL ANOMALY
 if rNorm*eNorm >= 0  % Anche queste porcozzi
     theta = acos(dot(r,n) / (rNorm*eNorm));
 else 
-    theta = 360 - acos(dot(r,n) / (rNorm*eNorm));
+    theta = 2*pi - acos(dot(r,n) / (rNorm*eNorm));
 end
 
 %% RADINATS TO DEGREES
 if nargin == 3 || deg == 1
-    Omega = Omega/360 * 2*pi;
-    omega = omega/360 * 2*pi;
-    theta = theta/360 * 2*pi;
+    Omega = 0.5 * Omega/pi * 360;
+    omega = 0.5 * omega/pi * 360;
+    theta = 0.5 * theta/pi * 360;
 end
 
 end
