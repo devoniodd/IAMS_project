@@ -1,4 +1,4 @@
-function [a,e,h,i,Omega,omega,theta] = rvToOrbital(r,v,mu,degrees)
+function [a,e,i,Omega,omega,theta] = rvToOrbital(r,v,mu,degrees)
 % Description - TBA
 
 %% VALUE CHECK
@@ -6,15 +6,13 @@ if nargin <= 2
     error("Error: not enough variables")
 end
 
-if nargin == 4 && degrees ~= "Yes"
-    if degrees ~= "No"
-        error("Please select a valid option:\nYes - Output in degrees\nNo - output in radians");
+if nargin == 4 && degrees ~= 1
+    if degrees ~= 0
+        error("Please select a valid option:\n1 - Output in degrees\n0 - output in radians");
     end
     disp("Answer is in radians");
-    deg = 0;
 else
     disp("Answer is in degrees");
-    deg = 1;
 end
 
 %% DIRECTIONAL VERSORS
@@ -67,10 +65,10 @@ else
 end
 
 %% RADINATS TO DEGREES
-if nargin == 3 || deg == 1
-    Omega = 0.5 * Omega/pi * 360;
-    omega = 0.5 * omega/pi * 360;
-    theta = 0.5 * theta/pi * 360;
+if nargin == 3 || degrees == 1
+    Omega = rad2deg(Omega);
+    omega = rad2deg(omega);
+    theta = rad2deg(theta);
 end
 
 end
