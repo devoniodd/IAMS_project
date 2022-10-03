@@ -59,7 +59,9 @@ end
 
 %% MEAN ANOMALY
 
-if dot(v,r) >= 0  % Anche queste porcozzi
+vRadial = mu/hNorm * eNorm * sin(theta);
+
+if vRadial >= 0  % Anche queste porcozzi
     theta = acos(dot(e/eNorm,r/rNorm));
 else 
     theta = 2*pi - acos(dot(e/eNorm,r/rNorm));
