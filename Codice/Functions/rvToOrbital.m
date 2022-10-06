@@ -8,7 +8,7 @@ end
 
 if nargin == 4 && degrees ~= 1
     if degrees ~= 0
-        error("Please select a valid option:\n1 - Output in degrees\n0 - output in radians");
+        error("Please select a valid option:    1 - Output in degrees      0 - output in radians");
     end
     disp("Answer is in radians");
 else
