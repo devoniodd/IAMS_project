@@ -3,7 +3,6 @@ function [dV,tT,tOrbit] = hohmannRound(r1,r2,dVsum)
 % [dV,tT, tOrbit] = hohmannRound(r1,r2,mu,dVsum)
 %
 % DESCRIPTION:
->>>>>>> 5beea21269df53b9f989793742cc9e84379f63ce
 % This function computes the transfer orbit between two circular orbits
 %
 % INPUT:
