@@ -1,5 +1,27 @@
 function [a,e,i,Omega,omega,theta] = carToOrbital(r,v,degrees)
-% Description - TBA
+% rvToOrbit - Conversion from Cartesian coordinates to Keplerian elements
+%
+% PROTOTYPE:
+% [a,e,i,Omega,omega,theta] = rvToOrbital(r,v,mu,degrees)
+%
+% DESCRIPTION:
+% Conversion from Cartesian coordinates to Keplerian elements. Angles in
+% radians.
+%
+% INPUT:
+% r                 [3x1]           Position vector                 [km]
+% v                 [3x1]           Velocity vector               [km/s]
+% mu                [1x1]           Gravitational parameter   [km^3/s^2]
+%
+% OUTPUT:
+% a                 [1x1]           Semi-major axis                 [km]
+% e                 [1x1]           Eccentricity                     [-]
+% i                 [1x1]           Inclination                [rad/deg]*
+% Omega             [1x1]           RAAN                       [rad/deg]*
+% omega             [1x1]           Pericentre anomaly         [rad/deg]*
+% theta             [1x1]           True anomaly               [rad/deg]*
+%
+% * Default value is in radians
 
 %% VALUE CHECK
 if nargin <= 2

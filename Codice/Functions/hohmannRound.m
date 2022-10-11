@@ -1,15 +1,21 @@
 function [dV,tT,tOrbit] = hohmannRound(r1,r2,dVsum)
+% PROTOTYPE:
+% [dV,tT, tOrbit] = hohmannRound(r1,r2,mu,dVsum)
+%
+% DESCRIPTION:
+>>>>>>> 5beea21269df53b9f989793742cc9e84379f63ce
 % This function computes the transfer orbit between two circular orbits
+%
 % INPUT:
-% r1 - The radius of the starting circular orbit
-% r2 - The radius of the target circular orbit
+% r1            [1x1]           Radius of the starting circular orbit       [km]
+% r2            [1x1]           The radius of the target circular orbit     [km]
+%
 % OUTPUT:
-% tOrbit - Structure containing all parameters regarding the elliptical
-% transfer orbit
-% dV - Sum of the delta Vs for the two impulses [if dVsum is 1] or a vector
-% containing two values representing the two impulses [id dVsum is 0]
-% tT - Time to tranfer from orbit 1 to orbit 2
-
+% tOrbit        [Str]           Parameters regarding the elliptical transfer orbit
+% dV            [1x1]           Sum of the delta Vs for the two impulses*   [m/s]
+% tT            [1x1]           Time to tranfer from orbit 1 to orbit 2     [s]
+%
+% * [if dVsum is 1] or a vector containing two values representing the two impulses [id dVsum is 0]                                                       
 %% UTILS
 if ismac
     load("../Data/utils.mat",'mu');
