@@ -9,12 +9,18 @@ function [T] = orbitalPeriod(a,M)
 
 % To call this function type[ P ] = orbital period ( R )
 
-%% CONSTANTS
-G = 6.673e-11;
+%% UTILS IMPORT
+
+if ismac
+    load("../Data/utils.mat",'G','mEarth');
+else
+    load("..\Data\utils.mat",'G','mEarth');
+end
 
 %% PERIOD
+
 if nargin == 1
-    M = 5.98e24;
+    M = mEarth;
 end
 
 T = sqrt((4*(pi^2)*a^3)/(G*M));

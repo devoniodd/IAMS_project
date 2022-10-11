@@ -1,4 +1,4 @@
-function [dV,tT, tOrbit] = hohmannRound(r1,r2,mu,dVsum)
+function [dV,tT,tOrbit] = hohmannRound(r1,r2,dVsum)
 % This function computes the transfer orbit between two circular orbits
 % INPUT:
 % r1 - The radius of the starting circular orbit
@@ -11,7 +11,11 @@ function [dV,tT, tOrbit] = hohmannRound(r1,r2,mu,dVsum)
 % tT - Time to tranfer from orbit 1 to orbit 2
 
 %% UTILS
-% Import useful constants (like mu)
+if ismac
+    load("../Data/utils.mat",'mu');
+else
+    load("..\Data\utils.mat",'mu');
+end
 
 %% TRANSFER ORBIT CHARACTERIZATION
 % Orbital parameters

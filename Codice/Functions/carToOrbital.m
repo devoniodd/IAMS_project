@@ -1,4 +1,4 @@
-function [a,e,i,Omega,omega,theta] = rvToOrbital(r,v,mu,degrees)
+function [a,e,i,Omega,omega,theta] = carToOrbital(r,v,degrees)
 % Description - TBA
 
 %% VALUE CHECK
@@ -15,10 +15,12 @@ else
     disp("Answer is in degrees");
 end
 
-%% DIRECTIONAL VERSORS
-iDir = [1; 0; 0];
-jDir = [0; 1; 0];
-kDir = [0; 0; 1];
+%% UTILS IMPORT 
+if ismac
+    load("../Data/utils.mat",'mu','iDir','jDir','kDir');
+else
+    load("..\Data\utils.mat",'mu','iDir','jDir','kDir');
+end
 
 %% VECTOR NORMALIZATION
 rNorm = norm(r);
@@ -66,7 +68,7 @@ else
 end
 
 %% RADINATS TO DEGREES
-if nargin == 3 || degrees == 1
+if nargin == 3 && degrees == 1
     Omega = rad2deg(Omega);
     omega = rad2deg(omega);
     theta = rad2deg(theta);
