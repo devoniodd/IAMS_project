@@ -23,9 +23,10 @@ if nargin == 7 && degrees ~= 1
     if degrees ~= 0
         error(sprintf("Please select a valid option: \n1 - Input in degrees \n0 - Input in radians"));
     end
-    disp("Input is in radians");
+%    disp("Input is in degrees");
 else
-    disp("Input is in degrees");
+%    disp("Input is in radians");
+    degrees = 0;
 end
 
 %% DEG TO RAD
