@@ -11,7 +11,7 @@ function [dV,tT,tOrbit] = hohmannRound(r1,r2,dVsum)
 %
 % OUTPUT:
 % tOrbit        [Str]           Parameters regarding the elliptical transfer orbit
-% dV            [1x1]           Sum of the delta Vs for the two impulses*   [m/s]
+% dV            [1x1]           Sum of the delta Vs for the two impulses*   [km/s]
 % tT            [1x1]           Time to tranfer from orbit 1 to orbit 2     [s]
 %
 % * [if dVsum is 1] or a vector containing two values representing the two impulses [id dVsum is 0]                                                       
