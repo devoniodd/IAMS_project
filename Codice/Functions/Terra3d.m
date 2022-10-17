@@ -1,14 +1,14 @@
-function Terra3d(ax,Rt)
+function Terra3d(Rt)
 % plotta la terra in 3d con il suo raggio nell origine degli assi
 % basta richiamare la funzione
 
-if nargin<2 
+if nargin<1 
     Rt=6378;
 end
 
 load('topo.mat','topo','topomap1');
 % whos topo topomap1
-contour(ax,0:359,-89:90,topo,[0 0],'b')
+contour(0:359,-89:90,topo,[0 0],'b');
 axis equal
 % box on
 % set(gca,'XLim',[0 360],'YLim',[-90 90], ...
@@ -16,7 +16,7 @@ axis equal
 %     'Ytick',[-90 -60 -30 0 30 60 90]);
 hold on
 image([0 360],[-90 90],topo,'CDataMapping', 'scaled');
-colormap(ax,topomap1)
+colormap(topomap1)
 [x,y,z] = sphere(100);
 % cla reset
 % axis square off
