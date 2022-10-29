@@ -1,4 +1,4 @@
-function [dV,tT,tOrbit] = hohmannRound(r1,r2,dVsum)
+function [dV,tT,tOrbit] = hohmannRound(r1,r2)
 % PROTOTYPE:
 % [dV,tT, tOrbit] = hohmannRound(r1,r2,mu,dVsum)
 %
@@ -48,11 +48,7 @@ tT = pi * sqrt((aT^3)/mu);
 
 %% OUTPUTS
 
-if dVsum
-    dV = dV1 + dV2;
-else
-    dV = [dV1, dV2];
-end
+dV = [dV1; dV2];
 
 tOrbit.e = eT;
 tOrbit.a = aT;

@@ -28,7 +28,7 @@ if nargin <= 2
     error("Error: not enough variables")
 end
 
-if nargin == 4 && degrees ~= 1
+if nargin == 3 && degrees ~= 1
     if degrees ~= 0
         error("Please select a valid option:    1 - Output in degrees      0 - output in radians");
     end
