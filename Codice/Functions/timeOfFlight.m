@@ -59,11 +59,8 @@ T = 2*pi/sqrt(mu) * a^(3/2);
 E1 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta1/2));
 E2 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta2/2));
 
-Me1 = E1 - e * sin(E1);
-Me2 = E2 - e * sin(E2);
-
-t1 = Me1 * T /(2*pi);
-t2 = Me2 * T /(2*pi);
+t1 = sqrt(a^3 / mu) * (E1 - e*sin(E1));
+t2 = sqrt(a^3 / mu) * (E2 - e*sin(E2));
 
 if theta2 >= theta1
     t = t2 - t1;
@@ -71,4 +68,6 @@ else
     t = t2 - t1 + T;
 end
 
+if t <= 0
+    t = T + t;
 end
