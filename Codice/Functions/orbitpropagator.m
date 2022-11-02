@@ -1,4 +1,4 @@
-function [CAR,t] = orbitpropagator(O,t_step,warpfactor)
+function [lon,TH] = orbitpropagator(O,t_step,warpfactor)
 
 % Imput is a matrix containing 5 Parameters for orbital characterization +
 % 2 Parameters with initial and final real anomalies
@@ -32,9 +32,7 @@ end
 % Allows to have a vector of finite elements at the beginning of every manouver
 Deltat = zeros(Rows+1,1);
 for i = 1 : Rows
-    a = O(i,1);
-    e = O(i,2);
-    Deltat(i+1) = timeOfFlight(a,e,O(i,6),O(i,7));
+    Deltat(i+1) = timeOfFlight(O(i,:),O(i,6),O(i,7));
 end
 
 %% Defining an absolute timespan/coordinates
@@ -97,15 +95,15 @@ end
 
 
 % Creating Earth Shape
+nPol = 50;
 E_radius = 6378.1363;
 E_flattening = 0.0033528131;
 E_z = E_radius*(1-E_flattening);
 
-%xlim([min(CAR(1,:)),max(CAR(1,:))]);
-%ylim([min(CAR(2,:)),max(CAR(2,:))]);
-%zlim([min(CAR(3,:)),max(CAR(3,:))]);
+figure(Name = 'Orbit propagation');
+hold on;
 
-[xE,yE,zE] = ellipsoid(0,0,0,E_radius,E_radius,E_z,100);
+[xE,yE,zE] = ellipsoid(0,0,0,E_radius,E_radius,E_z,nPol);
 Earth = surf(xE,yE,zE);
 Esurfce = imread('Earthtexture.jpg');
 set(Earth,'Facecolor','texturemap','Edgecolor','none','Cdata',Esurfce);
@@ -120,37 +118,86 @@ Erotstep = 360 / (24*60*60) * t_step;
 zaxys = [0,0,1];
 origin = [0,0,0];
 
+%Clouds
+C_radius = E_radius+20;
+C_z = C_radius*(1-E_flattening);
+[xC,yC,zC] = ellipsoid(0,0,0,C_radius,C_radius,C_z,nPol);
+Clouds = surf(xC,yC,zC);
+Cloudmap = imread('earthcloudmap.jpg');
+Cloudtrans = imread('earthcloudmaptrans.png');
+set(Clouds,'Facecolor','texturemap','Edgecolor','none','Cdata',Cloudmap);
+set(Clouds,'AlphaDataMapping','scaled',...
+    'AlphaData',Cloudtrans);
+
+Clouds.FaceColor = 'texturemap'; 
+Clouds.EdgeColor = 'none';
+Clouds.CData = Cloudmap;
+
+Clouds.FaceAlpha = 'texturemap';
+Clouds.AlphaData = max(Cloudmap,[],3);
+
+
+Crotstep = Erotstep*1.2;
+
 % defining boundaries
 
+grid on;
 axis equal;
-hold on;
+
+xlim([min(CAR(1,:)),max(CAR(1,:))]);
+ylim([min(CAR(2,:)),max(CAR(2,:))]);
+%zlim([min(CAR(3,:)),max(CAR(3,:))]);
 
 Speed = annotation('textbox', [0, 0.6, 0, 0], 'string', 'Speed:','Color','w');
 Tflight = annotation('textbox', [0, 0.5, 0, 0], 'string', 'T:','Color','w');
 
 
+
+
 %% Propagazione dell'orbita;
+tstart = tic;
 for i = 1 : length(CAR(1,:)) - 1
-  line('XData', CAR(1,i:i+1),'YData',CAR(2,i:i+1),'ZData',CAR(3,i:i+1),'Color', color(:,i));
+  animatedline(CAR(1,i:i+1),CAR(2,i:i+1),CAR(3,i:i+1),'Color', color(:,i));
+  
   rotate(Earth,zaxys,Erotstep,origin);
+  rotate(Clouds,zaxys,Crotstep,origin);
   set(Speed,'String',"Speed norm:" + CAR(4,i) + "km/s");
   set(Tflight,'String',"Time in flight:" + t(i) + "s");
   drawnow
   pause(t_step/warpfactor);
 end
+telapsed = toc(tstart);
+actualwarp = sum(Deltat)/telapsed;
+fprintf('Actual warp factor is: %d \n',actualwarp);
 
 %% Ground tracking; - da sistemare.
 TH = zeros(size(CAR(1,:)));
 PHI = zeros(size(CAR(1,:)));
+height = zeros(size(CAR(1,:)));
 
 for i = 1 : length(CAR(1,:))
     [TH(i),PHI(i),R] = cart2sph(CAR(1,i),CAR(2,i),CAR(3,i));
-    TH(i) = TH(i) - Erotstep*i;
+    TH(i) = TH(i) - deg2rad(Erotstep*(i-1));
+    height(i) = R - E_radius;
 end
 lat = rad2deg(PHI); % Cambio da elevazione a azimuth
-
 lon = rad2deg(TH);
 
-figure;
-geoscatter(lat,lon,1,CAR(4,:),'.');
+% Faccio apparire tutto sullo stesssa faccia:
+for i = 1 : length(CAR(1,:))
+    if lon(i) > 180
+        lon(i) = lon(i) - 360*(floor(lon(i)/360));    
+    end
+    if lon(i) < -180
+        lon(i) = lon(i) + 360*(floor(lon(i)/360));
+    end
+end
+
+figure(Name="Ground tracking");
+nlon = [-180,180];
+nlat =[-85,85];
+geolimits(nlat,nlon);
+hold on;
+geoscatter(lat,lon,1,height,'.');
+colormap turbo;
 geobasemap colorterrain;
