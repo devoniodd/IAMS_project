@@ -1,4 +1,4 @@
-function [t] = timeOfFlight(a,e,theta1,theta2,mass,degrees)
+function [t] = timeOfFlight(currentOrbit,theta1,theta2)
 % The function allows to calculate the orbital period T from the radius.
 
 % INPUT:
@@ -14,27 +14,17 @@ function [t] = timeOfFlight(a,e,theta1,theta2,mass,degrees)
 
 % To call this function type[ P ] = orbital period ( R )
 
+%% INPUT
+a = currentOrbit(1);
+e = currentOrbit(2);
+
 %% UTILS IMPORT
 
 if ismac
-    load("../Data/utils.mat",'G','mEarth');
+    load("../Data/utils.mat",'mu');
 else
-    load("..\Data\utils.mat",'G','mEarth');
+    load("..\Data\utils.mat",'mu');
 end
-
-%% DEG TO RAD
-if exist("degrees","var") && degrees == 1
-    theta1 = deg2rad(theta1);
-    theta2 = deg2rad(theta2);
-end
-
-%% PRELIMINARY
-
-if ~exist("mass","var") || mass == 0
-    mass = mEarth;
-end
-
-mu = G*mass;
 
 %% CIRCULAR ORBIT
 
@@ -65,7 +55,7 @@ Me2 = E2 - e * sin(E2);
 t1 = Me1 * T /(2*pi);
 t2 = Me2 * T /(2*pi);
 
-if theta2 >= theta1
+if theta2 >= theta1 && theta2 <= pi
     t = t2 - t1;
 else
     t = t2 - t1 + T;
