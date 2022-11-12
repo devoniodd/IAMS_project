@@ -1,4 +1,4 @@
-function [lon,TH] = orbitpropagator(O,t_step,warpfactor)
+function [lat,lon,CAR] = orbitpropagator(O,t_step,warpfactor)
 
 % Imput is a matrix containing 5 Parameters for orbital characterization +
 % 2 Parameters with initial and final real anomalies
@@ -12,6 +12,9 @@ function [lon,TH] = orbitpropagator(O,t_step,warpfactor)
 % 4     Orbit segment plotting --> CartoKep
 % 5     Actual orbit propagation
 % 6     Ground tracking?
+
+propOrbit = 1;
+groundTrack = 1;
 
 [Rows,Col] = size(O);
 if Col ~= 7
@@ -39,6 +42,7 @@ end
 t = (0 : t_step : sum(Deltat));
 CAR = [];
 
+
 %% Cart2Kep for every manouver
 
 for i = 1 : Rows
@@ -60,13 +64,18 @@ for i = 1 : Rows
     % lineare ad ogni iterazione --> Non ottimizzato
     
     time = @(E) sqrt(a^3/mu) .* (E - e.*sin(E));
-    dtime = @(E) sqrt(a^3/mu) .* (- e.*cos(E));
 
     for j = 1 : length(t_inflight)
         time_it = @(E) time(E) - t_inflight(j);
         E_vect(j+1) = fsolve(time_it,E_vect(j),options);
-        % E_vect(j+1) = newton(E_vect(j),1000,1e-6,time_it,dtime);
         th_vect(j) = 2*atan( sqrt((1+e)/(1-e)) * tan(E_vect(j+1)/2) );
+    end
+    
+    if O(i,6) >= 0 && O(i,6) < pi
+        th_vect = th_vect + O(i,6);
+    end
+    if O(i,6) >= pi
+        th_vect = O(i,6) + pi - th_vect(end:-1:1);
     end
 
     %% Kep2Car for every theta
@@ -77,30 +86,44 @@ for i = 1 : Rows
         CAR_t(3,j) = r(3);
         CAR_t(4,j) = norm(v);
     end
-
+    
     CAR = [CAR,CAR_t];
+
+    % Questa cosa e' un po' come barare e va sistemata! - Sistemo il tempo
+    [rCAR,cCAR] = size(CAR);
+    if size(t) ~= cCAR
+        t = 0 : t_step : t_step*cCAR;
+    end
+
 end
 
 % Setting 3D gradient
 Vcolorcode = round(CAR(4,:),2)*100; % Approssima le velocita' durante l'orbita e le trasforma in un numero finito
 Vcolorcode = ceil(Vcolorcode); % Messa per sicurezza, rende tutti gli elementi del vettore interi
+minV = min(Vcolorcode) - 1;
 maxV = max(Vcolorcode);
-cc = jet(maxV); % Crea una matrice con un grediente di colori RGB
+Vcolorcode = Vcolorcode - minV;
+cc = jet(maxV-minV); % Crea una matrice con un grediente di colori RGB
 color = zeros(3,length(CAR(4,:))); % Il vettore conterra' i colori associati alla velocita' nel plot dell'orbita
 for i = 1:1:length(CAR(4,:))-1 % Associa il colore alla velocita nell'orbita
     color(:,i) = cc(Vcolorcode(i),:)'; 
 end
 
 %% Setting Environment
-
-
 % Creating Earth Shape
 nPol = 50;
 E_radius = 6378.1363;
 E_flattening = 0.0033528131;
 E_z = E_radius*(1-E_flattening);
+% Earth rotation
+Erotstep = 360 / (24*60*60) * t_step;
+zaxys = [0,0,1];
+origin = [0,0,0];
 
+if propOrbit == 1 % Plot specific variables
+ 
 figure(Name = 'Orbit propagation');
+ax1 = axes;
 hold on;
 
 [xE,yE,zE] = ellipsoid(0,0,0,E_radius,E_radius,E_z,nPol);
@@ -112,11 +135,6 @@ set(Earth,'Facecolor','texturemap','Edgecolor','none','Cdata',Esurfce);
 set(gca,'color','k','xcolor','w','ycolor','w','zcolor','w');
 set(gcf,'color','k');
 
-% Earth rotation
-
-Erotstep = 360 / (24*60*60) * t_step;
-zaxys = [0,0,1];
-origin = [0,0,0];
 
 %Clouds
 C_radius = E_radius+20;
@@ -146,52 +164,47 @@ axis equal;
 
 xlim([min(CAR(1,:)),max(CAR(1,:))]);
 ylim([min(CAR(2,:)),max(CAR(2,:))]);
-%zlim([min(CAR(3,:)),max(CAR(3,:))]);
+zlim([ min([min(CAR(3,:)),E_radius]), max( [max(CAR(3,:)),E_radius] ) ]);
 
 Speed = annotation('textbox', [0, 0.6, 0, 0], 'string', 'Speed:','Color','w');
 Tflight = annotation('textbox', [0, 0.5, 0, 0], 'string', 'T:','Color','w');
 
-
-
+colormap jet;
+caxis([minV/100,maxV/100]);
+colorbar location eastoutside Color 'w'; 
 
 %% Propagazione dell'orbita;
 tstart = tic;
 for i = 1 : length(CAR(1,:)) - 1
-  animatedline(CAR(1,i:i+1),CAR(2,i:i+1),CAR(3,i:i+1),'Color', color(:,i));
+  animatedline(ax1,CAR(1,i:i+1),CAR(2,i:i+1),CAR(3,i:i+1),'Color', color(:,i));
   
   rotate(Earth,zaxys,Erotstep,origin);
   rotate(Clouds,zaxys,Crotstep,origin);
   set(Speed,'String',"Speed norm:" + CAR(4,i) + "km/s");
   set(Tflight,'String',"Time in flight:" + t(i) + "s");
-  drawnow
+  drawnow limitrate;
   pause(t_step/warpfactor);
 end
 telapsed = toc(tstart);
 actualwarp = sum(Deltat)/telapsed;
 fprintf('Actual warp factor is: %d \n',actualwarp);
 
+end
+
 %% Ground tracking; - da sistemare.
+if groundTrack == 1
+
 TH = zeros(size(CAR(1,:)));
 PHI = zeros(size(CAR(1,:)));
 height = zeros(size(CAR(1,:)));
 
 for i = 1 : length(CAR(1,:))
     [TH(i),PHI(i),R] = cart2sph(CAR(1,i),CAR(2,i),CAR(3,i));
-    TH(i) = TH(i) - deg2rad(Erotstep*(i-1));
+    TH(i) = wrapToPi(TH(i) - deg2rad(Erotstep*(i-1)));
     height(i) = R - E_radius;
 end
 lat = rad2deg(PHI); % Cambio da elevazione a azimuth
 lon = rad2deg(TH);
-
-% Faccio apparire tutto sullo stesssa faccia:
-for i = 1 : length(CAR(1,:))
-    if lon(i) > 180
-        lon(i) = lon(i) - 360*(floor(lon(i)/360));    
-    end
-    if lon(i) < -180
-        lon(i) = lon(i) + 360*(floor(lon(i)/360));
-    end
-end
 
 figure(Name="Ground tracking");
 nlon = [-180,180];
@@ -199,5 +212,8 @@ nlat =[-85,85];
 geolimits(nlat,nlon);
 hold on;
 geoscatter(lat,lon,1,height,'.');
-colormap turbo;
+colormap parula;
 geobasemap colorterrain;
+end
+
+return;

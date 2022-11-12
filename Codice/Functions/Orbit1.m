@@ -19,12 +19,10 @@ ax1 = axes;
 Terra3d(ax1);
 axis equal;
 
-ax2 = axes;
-
 % Define an indefinite plot
 h = plot3(ax2,nan,nan,nan,'or');
 
-patch(ax2, X,Y,Z,V,'Facecolor','none','Edgecolor','interp');
+patch(ax, X,Y,Z,V,'Facecolor','none','Edgecolor','interp');
 
 % Link two axes together
 hLink = linkprop([ax1,ax2],{'XLim','YLim','ZLim','CameraUpVector','CameraPosition','CameraTarget'});

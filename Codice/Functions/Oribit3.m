@@ -20,7 +20,9 @@ step_animation = 5;
 % Setting 3D gradient
 Vcolorcode = round(V,2)*100; % Approssima le velocita' durante l'orbita e le trasforma in un numero finito
 Vcolorcode = ceil(Vcolorcode); % Messa per sicurezza, rende tutti gli elementi del vettore interi
+minV = min(Vcolorcode) - 1;
 maxV = max(Vcolorcode);
+Vcolorcode = Vcolorcode - minV;
 cc = jet(maxV); % Crea una matrice con un grediente di colori RGB
 color = zeros(3,length(X)); % Il vettore conterra' i colori associati alla velocita' nel plot dell'orbita
 for i = 1:1:length(X)-1 % Associa il colore alla velocita nell'orbita
