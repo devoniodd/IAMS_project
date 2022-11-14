@@ -1,4 +1,4 @@
-function [r,v] = orbitalToCar(a,e,i,Omega,omega,theta,degrees)
+function [r,v] = orbitalToCar(a,e,i,Omega,omega,theta)
 % Conversion from Keplerian elements to Cartesian coordinates
 
 % INPUT:
@@ -8,7 +8,6 @@ function [r,v] = orbitalToCar(a,e,i,Omega,omega,theta,degrees)
 % Omega     [1x1]   RAAN, if degrees = 0 [rad] else if degrees = 1 [deg]
 % omega     [1x1]   Pericentre anomaly, if degrees = 0 [rad] else if degrees = 1 [deg]
 % theta     [1x1]   True anomaly, if degrees = 0 [rad] else if degrees = 1 [deg]
-% mu        [1x1]   Gravitational parameter [km^3/s^2]
 %
 % OUTPUT:
 % r         [3x1]   Position vector [km]
@@ -19,22 +18,10 @@ if nargin < 6
     error("Please insert a valid amount of variables");
 end
 
-if nargin == 7 && degrees ~= 1
-    if degrees ~= 0
-        error(sprintf("Please select a valid option: \n1 - Input in degrees \n0 - Input in radians"));
-    end
-%    disp("Input is in degrees");
-else
-%    disp("Input is in radians");
-    degrees = 0;
-end
-
-%% DEG TO RAD
-if degrees == 1
-    Omega = deg2rad(Omega);
-    omega = deg2rad(omega);
-    theta = deg2rad(theta);
-    i = deg2rad(i);
+if length(e) == 3 
+    e = norm(e);
+elseif length(e) ~= 1
+    error("Please check e value, it is neither a 3 element vector nor a scalar!");
 end
 
 %% UTILS IMPORT 
@@ -44,20 +31,17 @@ else
     load("..\Data\utils.mat",'mu');
 end
 
-%% VECTORS NORMALIZATION
-eNorm = norm(e);
-
 %% CALCOLI ...sistema titolo
 
 % Semilat rett
-p = a*(1-eNorm^2);
+p = a*(1-e^2);
 
 % Radius
-rNorm = p/(1+eNorm*cos(theta));
+rNorm = p/(1+e*cos(theta));
 
 %% R,V PERIFOCAL SYSTEM
 rPF = rNorm * [cos(theta); sin(theta); 0];
-vPF = sqrt(mu/p) * [-sin(theta); (eNorm+cos(theta)); 0];
+vPF = sqrt(mu/p) * [-sin(theta); (e+cos(theta)); 0];
 
 %% FROM PERIFOCAL TO GEOCENTRIC
 
