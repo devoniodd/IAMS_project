@@ -36,7 +36,7 @@ if ~exist("e","var") || e == 0
     if ~exist("theta1","var")
         return;
     end
-
+    
     dTheta = abs(theta1-theta2);
     t = T * dTheta/(2*pi);
     return;
@@ -56,8 +56,4 @@ if theta2 >= theta1 && theta2 <= pi
     t = t2 - t1;
 else
     t = t2 - t1 + T;
-end
-
-if t <= 0
-    t = T + t;
 end

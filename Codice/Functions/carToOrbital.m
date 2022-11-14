@@ -1,4 +1,4 @@
-function [a,e,i,Omega,omega,theta] = carToOrbital(r,v,degrees)
+function [a,e,i,Omega,omega,theta] = carToOrbital(r,v)
 % rvToOrbit - Conversion from Cartesian coordinates to Keplerian elements
 %
 % PROTOTYPE:
@@ -24,17 +24,12 @@ function [a,e,i,Omega,omega,theta] = carToOrbital(r,v,degrees)
 % * Default value is in radians
 
 %% VALUE CHECK
-if nargin <= 2
+if nargin < 2
     error("Error: not enough variables")
 end
 
-if nargin == 3 && degrees ~= 1
-    if degrees ~= 0
-        error("Please select a valid option:    1 - Output in degrees      0 - output in radians");
-    end
-    disp("Answer is in radians");
-else
-    disp("Answer is in degrees");
+if length(r) ~= 3 || length(v) ~= 3
+    error("Please provide a 1x3 vector for both radius and velocity");
 end
 
 %% UTILS IMPORT 
