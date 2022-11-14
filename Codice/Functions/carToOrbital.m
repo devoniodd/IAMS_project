@@ -2,7 +2,7 @@ function [a,e,i,Omega,omega,theta] = carToOrbital(r,v)
 % rvToOrbit - Conversion from Cartesian coordinates to Keplerian elements
 %
 % PROTOTYPE:
-% [a,e,i,Omega,omega,theta] = rvToOrbital(r,v,mu,degrees)
+% [a,e,i,Omega,omega,theta] = rvToOrbital(r,v)
 %
 % DESCRIPTION:
 % Conversion from Cartesian coordinates to Keplerian elements. Angles in
@@ -10,18 +10,16 @@ function [a,e,i,Omega,omega,theta] = carToOrbital(r,v)
 %
 % INPUT:
 % r                 [3x1]           Position vector                 [km]
-% v                 [3x1]           Velocity vector               [km/s]
-% mu                [1x1]           Gravitational parameter   [km^3/s^2]
+% v                 [3x1]           Velocity vector                 [km/s]
 %
 % OUTPUT:
 % a                 [1x1]           Semi-major axis                 [km]
-% e                 [1x1]           Eccentricity                     [-]
-% i                 [1x1]           Inclination                [rad/deg]*
-% Omega             [1x1]           RAAN                       [rad/deg]*
-% omega             [1x1]           Pericentre anomaly         [rad/deg]*
-% theta             [1x1]           True anomaly               [rad/deg]*
-%
-% * Default value is in radians
+% e                 [1x1]           Eccentricity                    [-]
+% i                 [1x1]           Inclination                     [rad]
+% Omega             [1x1]           RAAN                            [rad]
+% omega             [1x1]           Pericentre anomaly              [rad]
+% theta             [1x1]           True anomaly                    [rad]
+
 
 %% VALUE CHECK
 if nargin < 2
@@ -42,7 +40,6 @@ end
 %% VECTOR NORMALIZATION
 rNorm = norm(r);
 vNorm = norm(v);
-% vRadial = r*v/rNorm; % Non necessari
 
 %% SEMI - MAJOR AXIS
 a = 1/(2/rNorm - vNorm^2/mu);
@@ -52,44 +49,37 @@ h = cross(r,v);
 hNorm = norm(h);
 
 %% ECCENTRICITY
-e = 1/mu * (cross(v,h) - mu*r./rNorm);
+e = 1/mu * (cross(v,h) - mu*r/rNorm);
 eNorm = norm(e);
 
 %% INCLINATION
 i = acos(dot(h,kDir)/hNorm);
 
-%% NODAL PLANE
-n = cross(kDir,h) / norm (cross(kDir,h));
-nNorm = norm(n);
+%% NODAL PLANE DIRECTION
+N = cross(kDir,h);
+NNorm = norm(N);
 
 %% RIGHT ASCENSION OF THE ASCENDING NODE - LONGITUDE OF ASCENDING NODE
-if nNorm*jDir >= 0 % Condizioni da sistemare
-    Omega = acos( dot(n,iDir) / nNorm);
+if dot(N,jDir) >= 0
+    Omega = acos( dot(N,iDir) / NNorm);
 else 
-    Omega = 2*pi - acos( dot(n,iDir) / nNorm);
+    Omega = 2*pi - acos( dot(N,iDir) / NNorm);
 end
 
 %% ARGUMENT OF PERIAPSIS
-if eNorm*nNorm >= 0 % Ste condizioni sono da sistemare
-    omega = acos(dot(e,n) / eNorm);
+if dot(e,kDir) >= 0 
+    omega = acos(dot(N,e) / (NNorm * eNorm));
 else 
-    omega = 2*pi - acos(dot(e,n) / eNorm);
+    omega = 2*pi - acos(dot(N,e) / (NNorm * eNorm));
 end
 
 %% MEAN ANOMALY
 
-if dot(v,r) >= 0  % Anche queste porcozzi
-    theta = acos(dot(e/eNorm,r/rNorm));
+if dot(v,r) >= 0
+    theta = acos(dot(e,r) / (eNorm * rNorm));
 else 
-    theta = 2*pi - acos(dot(e/eNorm,r/rNorm));
+    theta = 2*pi - acos(dot(e,r) / (eNorm * rNorm));
 end
 
-%% RADINATS TO DEGREES
-if nargin == 3 && degrees == 1
-    Omega = rad2deg(Omega);
-    omega = rad2deg(omega);
-    theta = rad2deg(theta);
-    i = rad2deg(i);
-end
 
 end
