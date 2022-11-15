@@ -34,8 +34,6 @@ if impulse > 3
     error("Number of impulses not compatible with the current orbit")
 end
 
-%% VARIABLES
-
 %% DECLARATION OF VARIABLES
 
 Orbit = zeros(impulse+1,7);
