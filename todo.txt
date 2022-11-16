@@ -1,0 +1,7 @@
+- model for todo list [X]
+- which strategies to implement []
+- latex template []
+- finish writing functions []
+	- bielliptic []
+	- lambert []
+- decide standard input []

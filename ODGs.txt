@@ -1,0 +1,7 @@
+14/11/22
+-todo [X]
+- work breakdown [X]
+	- luca: finish implementing plotOrbit so that even a dumbass (like matte) can use it
+	- matte: add comments in every function and do bielliptic and periapsisChange
+	- fra: lambert
+-check functions []
