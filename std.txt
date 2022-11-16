@@ -1,0 +1,29 @@
+STanDards
+
+***** GENERALS *****
+1) All orbits must be communicated via a vector (or matrix with multiple lines one for each orbit) and they must follow the pattern:
+orbit = [a,e,i,O,o,th1,th2]
+if any parameter (like th2, the real anomaly of the last point of the orbit before a transfer) is not known yet it must be nan indicating it is yet to be determined.
+DO NOT MAKE AN ORBIT WITH LESS/MORE THAN 7 ELEMENTS
+
+2)
+
+
+***** MANOUVER FUNCTION *****
+INPUTS:
+initialOrbit = [a1,e1,i1,O1,o1,th1,nan];
+finalOrbit = [a2,e2,i2,O2,o2,th2,nan];
+
+OUTPUTS:
+dV = [dV1r,dV1t; dV2r,dV2t; ...; dVnr,dVnt];
+orbits = [a1,e1,i1,O1,o1,th1,th_dV1;
+	  a2,e2,i2,O2,o3,th2,th_dV2;
+	  ...;
+	  an,en,in,On,on,thn,th_dVn];
+
+NOTE: this standard apply only to major manouvers functions (planeChange, changeOrbitShape, secOrbit, lambert). No need to implement this standards on functions like homannRound, biellipticaRound, ...
+	
+ 
+
+
+ 
