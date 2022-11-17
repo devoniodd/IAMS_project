@@ -9,13 +9,13 @@ function [dv,orb1,orb2] = changePeriapsisArg(orb1,do)
 % Omega Difference is considered positive if counterclockwise 
 %
 % INPUT:
-% initial orbit     [1x7]           Initial orbital parameters                         [N/D]
-% delta omega       [1x1]           Difference between anomalies                       [rad]
+% initial orbit     [1x7]           Initial orbital parameters                          [N/D]
+% delta omega       [1x1]           Difference between anomalies                        [rad]
 %
 % OUTPUT:
-% delta V           [1x2]           Difference between velocities and time of flight   [km/s,s]
-% initial orbit     [1x7]           Initial orbital parameters                         [N/D]
-% final orbit       [1x7]           Final orbital parameters                           [N/D]
+% delta V           [1x1]           Difference between velocities                       [km/s]
+% initial orbit     [1x7]           Initial orbital parameters                          [N/D]
+% final orbit       [1x7]           Final orbital parameters                            [N/D]
 
 %% UTILS
 if ismac
@@ -57,11 +57,7 @@ end
 orb2(1,7) = nan;
 
 %% VELOCITY
-%Vector creation
-dv = zeros(1,2);
 
 %Velocity difference
-dv(1,1) = 2*sqrt(mu/orb1(1,1)*(1-orb1(1,2)^2))*orb1(1,2)*sin(do/2);
+dv = 2*sqrt(mu/orb1(1,1)*(1-orb1(1,2)^2))*orb1(1,2)*sin(do/2);
 
-%Time of Flight
-dv(1,2) = timeOfFlight(orb1,orb1(1,6),orb1(1,7));
