@@ -1,8 +1,8 @@
 function [dv,orb1,orb2] = changePeriapsisArg(orb1,do)
-%%changePeriapsisArg - Change of the Periapsis anomaly  (Secant Maneuver)
+% changePeriapsisArg - Change of the Periapsis anomaly  (Secant Maneuver)
 %
 % PROTOTYPE:
-%[dv,orb1,orb2] = changePeriapsisArg(orb1,do)
+% [dv,orb1,orb2] = changePeriapsisArg(orb1,do)
 %
 % DESCRIPTION:
 % Change of the Periapsis anomaly by giving the function the delta omega required.
