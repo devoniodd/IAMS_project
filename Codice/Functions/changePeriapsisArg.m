@@ -28,26 +28,26 @@ if do > 2*pi || do < 0
     domega = wrapTo2Pi(do);
 end
 %% FINAL ORBIT
-%Vector creation
+% Vector creation
 orb2 = zeros(1,7);
 
-%Unchanged Parameters
+% Unchanged Parameters
 orb2(1,1) = orb1(1,1);
 orb2(1,2) = orb1(1,2);
 orb2(1,3) = orb1(1,3);
 orb2(1,4) = orb1(1,4);
 
-%Final omega
+% Final omega
 orb2(1,5) = orb1(1,5) + domega;
 
-%Final theta
+% Final theta
 if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
     orb1(1,7) = domega/2;
 else
     orb1(1,7) = do/2 + pi;
 end
 
-%Initial and Final theta new orbit
+% Initial and Final theta new orbit
 if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
     orb2(1,6) = 2*pi - domega/2;
 else
@@ -58,6 +58,7 @@ orb2(1,7) = nan;
 
 %% VELOCITY
 
-%Velocity difference
+% Velocity difference
 dv = 2*sqrt(mu/orb1(1,1)*(1-orb1(1,2)^2))*orb1(1,2)*sin(do/2);
 
+end
