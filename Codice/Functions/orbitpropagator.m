@@ -62,13 +62,32 @@ for i = 1 : Rows
     % 1 --> Attraverso il calcolo puntuale della anomalia eccentrica Pro:
     % easy, visto a esercitazione, Contro: richiede soluzione di un probelma non
     % lineare ad ogni iterazione --> Non ottimizzato
+
+    p = a*(1-e^2);
+    timeE = @(E) sqrt(a^3/mu) .* (E - e.*sin(E));
+    timeP = @(D) 0.5 * sqrt(p^3 / mu) * (D - D^3 / 3);
+    timeH = @(F) sqrt(-a^3 / mu) * (e*sinh(F) - F);
+
     
-    time = @(E) sqrt(a^3/mu) .* (E - e.*sin(E));
+    thE = @(E) 2*atan( sqrt((1+e)/(1-e)) * tan(E/2) );
+    thP = @(D) 2*atan(D);
+    thH = @(F) 2*atan(sqrt((1+e)/(e-1)) * tanh(F/2));
+
+    if  e >= 0 && e < 1
+        time = @(E) timeE(E);
+        th = @(E) thE(E);
+    elseif e == 1
+        time = @(D) timeP(D);
+        th = @(D) thP(D);
+    else 
+        time = @(F) timeH(F);
+        th = @(F) thH(F);
+    end
 
     for j = 1 : length(t_inflight)
         time_it = @(E) time(E) - t_inflight(j);
         E_vect(j+1) = fsolve(time_it,E_vect(j),options);
-        th_vect(j) = 2*atan( sqrt((1+e)/(1-e)) * tan(E_vect(j+1)/2) );
+        th_vect(j) = th(E_vect(j+1));
     end
     
     if O(i,6) >= 0 && O(i,6) < pi

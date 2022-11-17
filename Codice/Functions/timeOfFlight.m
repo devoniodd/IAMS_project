@@ -44,16 +44,47 @@ end
 
 %% ELLIPTICAL ORBIT
 
-T = 2*pi/sqrt(mu) * a^(3/2);
+if e > 0 && e < 1
+    T = 2*pi/sqrt(mu) * a^(3/2);
 
-E1 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta1/2));
-E2 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta2/2));
+    E1 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta1/2));
+    E2 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta2/2));
 
-t1 = sqrt(a^3 / mu) * (E1 - e*sin(E1));
-t2 = sqrt(a^3 / mu) * (E2 - e*sin(E2));
+    t1 = sqrt(a^3 / mu) * (E1 - e*sin(E1));
+    t2 = sqrt(a^3 / mu) * (E2 - e*sin(E2));
 
-if theta2 >= theta1 && theta2 <= pi
-    t = t2 - t1;
-else
-    t = t2 - t1 + T;
+    if theta2 >= theta1 && theta2 <= pi
+        t = t2 - t1;
+    else
+        t = t2 - t1 + T;
+    end
+    return;
+end
+
+%% PARABOLICAL ORBIT
+
+if e == 1
+    rp = a*(1-e);
+    p = 2*rp;
+
+    D1 = tan(theta1/2);
+    D2 = tan(theta2/2);
+
+    t1 = 0.5 * sqrt(p^3 / mu) * (D1 - D1^3 / 3);
+    t2 = 0.5 * sqrt(p^3 / mu) * (D2 - D2^3 / 3);
+
+    t = abs(t2 - t1);
+    return;
+end
+
+%% HYPERBOLICAL ORBIT
+if e > 1
+    F1 = 2 * atanh(sqrt((1+e)/(e-1)) * tan(theta1/2));
+    F2 = 2 * atanh(sqrt((1+e)/(e-1)) * tan(theta2/2));
+
+    t1 = sqrt(-a^3 / mu) * (e*sinh(F1) - F1);
+    t2 = sqrt(-a^3 / mu) * (e*sinh(F2) - F2);
+
+    t = abs(t2 - t1);
+    return;
 end
