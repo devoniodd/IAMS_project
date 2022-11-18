@@ -1,8 +1,8 @@
-function [dv,orb1,orb2] = changePeriapsisArg(orb1,domega)
+function [dV,tof,orb1,orb2] = changePeriapsisArg(orb1,domega)
 % changePeriapsisArg - Change of the Periapsis anomaly  (Secant Maneuver)
 %
 % PROTOTYPE:
-% [dv,orb1,orb2] = changePeriapsisArg(orb1,domega)
+% [dv,tof,orb1,orb2] = changePeriapsisArg(orb1,domega)
 %
 % DESCRIPTION:
 % Change of the Periapsis anomaly by giving the function the delta omega required.
@@ -14,6 +14,7 @@ function [dv,orb1,orb2] = changePeriapsisArg(orb1,domega)
 %
 % OUTPUT:
 % delta V           [1x1]           Difference between velocities                       [km/s]
+% time of flight    [1x1]           Time to tranfer from orbit 1 to orbit 2             [s]
 % initial orbit     [1x7]           Initial orbital parameters                          [N/D]
 % final orbit       [1x7]           Final orbital parameters                            [N/D]
 
@@ -59,9 +60,11 @@ end
 
 orb2(1,7) = nan;
 
-%% VELOCITY
+%% VELOCITY DIFFERENCE
+dV = 2*sqrt(mu/(orb1(1,1)*(1-orb1(1,2)^2)))*orb1(1,2)*sin(domega/2);
 
-% Velocity difference
-dv = 2*sqrt(mu/(orb1(1,1)*(1-orb1(1,2)^2)))*orb1(1,2)*sin(domega/2);
+%% TIME OF FLIGHT
+tof = timeOfFlight(orb1,orb1(1,6),orb1(1,7));
+
 
 end
