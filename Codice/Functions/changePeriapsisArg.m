@@ -6,7 +6,7 @@ function [dV,tof,orb1,orb2] = changePeriapsisArg(orb1,domega)
 %
 % DESCRIPTION:
 % Change of the Periapsis anomaly by giving the function the delta omega required.
-% Omega Difference is considered positive if counterclockwise 
+% Omega Difference is considered positive if counterclockwise. 
 %
 % INPUT:
 % initial orbit     [1x7]           Initial orbital parameters                          [N/D]
@@ -29,7 +29,6 @@ if domega > 2*pi || domega < 0
     domega = wrapTo2Pi(domega);
 end
 
-
 %% FINAL ORBIT
 
 % Vector creation
@@ -42,7 +41,7 @@ orb2(1,3) = orb1(1,3);
 orb2(1,4) = orb1(1,4);
 
 % Final omega
-orb2(1,5) = orb1(1,5) + domega;
+orb2(1,5) = wrapTo2Pi(orb1(1,5) + domega);
 
 % Final theta
 if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
