@@ -31,18 +31,18 @@ else
     load("..\Data\utils.mat",'mu');
 end
 
-%% CALCOLI ...sistema titolo
-
-% Semilat rett
-p = a*(1-e^2);
-
-% Radius
-rNorm = p/(1+e*cos(theta));
-
 %% R,V PERIFOCAL SYSTEM
+if e >= 0 && e < 1 % Elliptic
+    p = a*(1-e^2); % Semilat rett
+elseif e == 1 % Parabolic
+    p = 2 * a;
+else
+    p = a*(e^2 - 1);    
+end
+
+rNorm = p/(1+e*cos(theta)); % Radius
 rPF = rNorm * [cos(theta); sin(theta); 0];
 vPF = sqrt(mu/p) * [-sin(theta); (e+cos(theta)); 0];
-
 %% FROM PERIFOCAL TO GEOCENTRIC
 
 % Rotation of angle Omega along earth's K axis

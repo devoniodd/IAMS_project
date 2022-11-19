@@ -15,7 +15,7 @@ r2 = norm(r2);
 %% dTH
 
 discern = dot(cross(r1Vec,r2Vec),kDir);
-if prograde
+if prograde == 1
     if discern >= 0
         dTh = acos(dot(r1Vec,r2Vec) / (r1 * r2));
     else
@@ -30,7 +30,6 @@ else
 end
 
 %% A
-
 
 A = sin(dTh) * sqrt((r1*r2)/(1-cos(dTh)));
 

@@ -10,7 +10,7 @@ orbit1 = zeros(1,7);
 orbit1(2) = norm(e);
 
 orbit2 = [16720.0000 0.2502 1.1190 0.6245 3.1350 3.1000];
-[r2, v2] = orbitalToCar(15660, 0.2659, 0.8321, 1.2440, 2.9320, 3.0970);
+[r2, v2] = orbitalToCar(15660, 0.2659, 0.8321, 1.2440, 2.9320, 1.5*pi);
 
 v1t = [30, 30, 30];
 t = 100;
@@ -24,8 +24,9 @@ orbitT(2) = norm(e);
 
 orbit1(7) = 2*pi;
 orbit2(7) = 2*pi;
-orbitT(7) = 2*pi;
+orbit2(6) = 0;
+orbitT(7) = pi;
 
 orbits = [orbit1; orbitT; orbit2];
 
-%orbitpropagator(orbits,100,5000);
+drawOrbitapp(orbits,0.1);
