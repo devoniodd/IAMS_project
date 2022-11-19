@@ -1,50 +1,46 @@
-function [t] = timeOfFlight(currentOrbit,theta1,theta2)
-% The function allows to calculate the orbital period T from the radius.
-
+function [t] = timeOfFlight(orbit,theta1,theta2)
+% timeOfFlight - Time required to go from theta1 to theta2
+%
+% PROTOTYPE:
+% [t] = timeOfFlight(orbit,theta1,theta2)
+%
+% DESCRIPTION:
+% The function calculates the time neeeded to tread between two points from
+% an orbit of any shape.
+% Angles must be given in radians.
+%
 % INPUT:
-% a         [1x1][km]           Ellipse major apsis                                                 
-% e         [1x1][/]            Eccentricity
-% theta1    [1x1][rad][deg]     Initial true anomaly
-% theta2    [1x1][rad][deg]     Final true anomaly
-% mass      [1x1][kg]           Mass of the planet (If left unspecified or 0 earth mass is used)    
-% degrees   [1x1][/]            1 for input angle in degrees
+% orbit     [1x7]   Orbital parameters vector       [N/D]
+% theta1    [1x1]   Starting point of your route    [rad]
+% theta2    [1x1]   Ending point of your route      [rad]
 %
 % OUTPUT:
-% t - time of flight
-
-% To call this function type[ P ] = orbital period ( R )
-
-%% INPUT
-a = currentOrbit(1);
-e = currentOrbit(2);
-
+% t         [1x1]   Time of flight                  [s]
+% 
 %% UTILS IMPORT
-
 if ismac
     load("../Data/utils.mat",'mu');
 else
     load("..\Data\utils.mat",'mu');
 end
 
-%% CIRCULAR ORBIT
+%% INPUT EXTRACTION
+a = orbit(1,1);
+e = orbit(1,2);
 
-if ~exist("e","var") || e == 0
+%% CIRCULAR ORBIT
+if  e == 0
 
     T = 2*pi*sqrt((a^3)/(mu));
-    t = T;
-
-    if ~exist("theta1","var")
-        return;
-    end
-    
-    dTheta = abs(theta1-theta2);
+    dTheta = abs(theta2-theta1);
     t = T * dTheta/(2*pi);
     return;
+
 end
 
 %% ELLIPTICAL ORBIT
-
 if e > 0 && e < 1
+   
     T = 2*pi/sqrt(mu) * a^(3/2);
 
     E1 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta1/2));
@@ -59,11 +55,12 @@ if e > 0 && e < 1
         t = t2 - t1 + T;
     end
     return;
+
 end
 
 %% PARABOLICAL ORBIT
-
 if e == 1
+
     rp = a*(1-e);
     p = 2*rp;
 
@@ -75,10 +72,12 @@ if e == 1
 
     t = abs(t2 - t1);
     return;
+
 end
 
 %% HYPERBOLICAL ORBIT
 if e > 1
+    
     F1 = 2 * atanh(sqrt((1+e)/(e-1)) * tan(theta1/2));
     F2 = 2 * atanh(sqrt((1+e)/(e-1)) * tan(theta2/2));
 
@@ -87,4 +86,7 @@ if e > 1
 
     t = abs(t2 - t1);
     return;
+
+end
+
 end
