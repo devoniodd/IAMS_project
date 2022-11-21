@@ -1,4 +1,4 @@
-function [dV,targetOrbit] = planeChange(currentOrbit,targetOrbit,pureChange)
+function [dV,tof,targetOrbit,currentOrbit] = planeChange(currentOrbit,i2,O2)
 
 %% UTILS
 if ismac
@@ -8,24 +8,15 @@ else
 end
 
 %% INPUT ORGANIZATION
-ai = currentOrbit(1);
-ei = currentOrbit(2);
-ii = currentOrbit(3);
-Oi = currentOrbit(4);
-oi = currentOrbit(5);
-
-af = targetOrbit(1);
-ef = targetOrbit(2);
-iF = targetOrbit(3);
-Of = targetOrbit(4);
-if ~pureChange
-    of = targetOrbit(5);
-end
+a1 = currentOrbit(1);
+e1 = currentOrbit(2);
+i1 = currentOrbit(3);
+O1 = currentOrbit(4);
+o1 = currentOrbit(5);
 
 %% PROBLEM VARIABLES
-
-dO = Of - Oi;
-di = iF - ii;
+dO = O2 - O1;
+di = i2 - i1;
 
 %% CASES 
 
@@ -38,57 +29,50 @@ elseif dO < 0 && di > 0
 elseif dO < 0 && di < 0
     id = 4;
 else 
-    error("Error, dO and/or di are not valid, please check inputs!")
+    error("Error, i2 and/or O2 are not valid, please check inputs!")
 end
 
-%% 1
+%% SPHERIC TRIANGLES
+alpha = acos(cos(i1)*cos(i2) + sin(i1)*sin(i2)*cos(dO));
 
-alpha = acos(cos(ii)*cos(iF) + sin(ii)*sin(iF)*cos(dO));
+u1Cos= (-1)^(id+1) * (cos(alpha)*cos(i1) - cos(i2))/(sin(alpha)*sin(i1));
+u1Sin = (-1)^(id+1) * sin(i2)*sin(dO)/sin(alpha);
+u1 = atan(u1Sin/u1Cos);
 
-uiCos= (-1)^(id+1) * (cos(alpha)*cos(ii) - cos(iF))/(sin(alpha)*sin(ii));
-uiSin = (-1)^(id+1) * sin(iF)*sin(dO)/sin(alpha);
-ui = atan(uiSin/uiCos);
+u2Cos = (-1)^(id+1) * (cos(i1) - cos(alpha)*cos(i2))/(sin(alpha)*sin(i2));
+u2Sin = (-1)^(id+1) * sin(i1)*sin(dO)/sin(alpha);
+u2 = atan(u2Sin/u2Cos);
 
-ufCos = (-1)^(id+1) * (cos(ii) - cos(alpha)*cos(iF))/(sin(alpha)*sin(iF));
-ufSin = (-1)^(id+1) * sin(ii)*sin(dO)/sin(alpha);
-uf = atan(ufSin/ufCos);
+theta1 = wrapTo2Pi(u1-o1);
 
-if ui >= oi
-    thetai = ui - oi;
-else 
-    thetai = 2*pi + ui - oi;
-end
-
-if pureChange
-    thetaf = thetai;
-  if uf >= thetaf
-        of = uf - thetaf;
-    else 
-        of = 2*pi + uf - thetaf;
-    end
-else
-    if uf >= of
-        thetaf = uf - of;
-    else 
-        thetaf = 2*pi + uf - of;
-    end
-end
+theta2 = theta1;
+o2 =wrapTo2Pi(u2 - theta2);
 
 %% dV
+V1t = sqrt(mu/(a1*(1-e1^2))) * (1 + e1*cos(theta1));
+dV = 2 * V1t * sin(alpha/2);
 
-Vit = sqrt(mu/(ai*(1-ei^2))) * (1 + ei*cos(thetai));
+%% OUTPUT
 
-if pureChange
-    dV = 2 * Vit * sin(alpha/2);
-    return;
-end
+% Current Orbit
+currentOrbit(1,7) = theta1;
 
-Vir = sqrt(mu/(ai*(1-ei^2))) * ei * sin(thetai);
+% Target Orbit
+targetOrbit = zeros(1,7);
+targetOrbit(1,1) = a1;
+targetOrbit(1,2) = e1;
+targetOrbit(1,3) = i2;
+targetOrbit(1,4) = O2;
+targetOrbit(1,5) = o2;
+targetOrbit(1,6) = theta2;
+targetOrbit(1,7) = nan;
 
-Vft = sqrt(mu/(af*(1-ef^2))) * (1 + ef*cos(thetaf));
-Vfr = sqrt(mu/(af*(1-ef^2))) * ef * sin(thetaf);
+% Time to reach maneuver point
+tof = timeOfFlight(currentOrbit,currentOrbit(1,6),currentOrbit(1,7));
 
-dV = sqrt((Vfr-Vir)^2 + Vit^2 + Vft^2 - 2*Vit*Vft*cos(alpha));
+
+
+
 
 
 
