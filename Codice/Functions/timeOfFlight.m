@@ -32,7 +32,7 @@ e = orbit(1,2);
 if  e == 0
 
     T = 2*pi*sqrt((a^3)/(mu));
-    dTheta = abs(theta2-theta1);
+    dTheta = wrapTo2Pi(theta2-theta1);
     t = T * dTheta/(2*pi);
     return;
 
