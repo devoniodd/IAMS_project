@@ -1,9 +1,19 @@
-function drawOrbitapp(O,th_step)
+function drawOrbitapp(O,th_step,showOrbitCompletion)
 % Imput is a matrix containing 5 Parameters for orbital characterization +
 % 2 Parameters with initial and final real anomalies
 % Es O = [a,e,i,O,o,thetaI,thetaF];
 
 % How it works
+
+if nargin < 3
+    showOrbitCompletion = 1;
+end
+
+if showOrbitCompletion ~= 0 
+    if showOrbitCompletion ~= 1
+        error('Please insert a value for showOrbitCompletion 1 - Yes    0 - No')
+    end
+end
 
 [Rows,Col] = size(O);
 if Col ~= 7
@@ -100,7 +110,7 @@ for i = 1 : Rows
     
     set(h,'XData',manouver(1),'YData',manouver(2),'ZData',manouver(3));
 
-    if e < 1
+    if e < 1 && showOrbitCompletion ~= 0
     plot3(Orbit_path(1,:),Orbit_path(2,:),Orbit_path(3,:),LineStyle='--',Color=color(i,:));
     end
 end
