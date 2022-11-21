@@ -2,9 +2,9 @@ function [v1,v2] = lambert(r1,r2,dt,prograde)
 
 %% UTILS IMPORT 
 if ismac
-    load("../Data/utils.mat",'mu','iDir','jDir','kDir');
+    load("../Data/utils.mat",'mu','kDir');
 else
-    load("..\Data\utils.mat",'mu','iDir','jDir','kDir');
+    load("..\Data\utils.mat",'mu','kDir');
 end
 
 r1Vec = r1;
