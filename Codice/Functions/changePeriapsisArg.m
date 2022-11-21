@@ -2,12 +2,12 @@ function [dV,tof,orb1,orb2] = changePeriapsisArg(orb1,omega2)
 % changePeriapsisArg - Change of the Periapsis anomaly  (Secant Maneuver)
 %
 % PROTOTYPE:
-% [dv,tof,orb1,orb2] = changePeriapsisArg(orb1,domega)
+% [dV,tof,orb1,orb2] = changePeriapsisArg(orb1,omega2)
 %
 % DESCRIPTION:
-% Change of the Periapsis anomaly by giving the function the delta omega required.
-% Omega Difference is considered positive if counterclockwise. 
-%
+% Change of the Periapsis anomaly by giving the function the final omega
+% and the starting orbit. 
+% 
 % INPUT:
 % initial orbit     [1x7]           Initial orbital parameters                          [N/D]
 % final omega       [1x1]           Final periapsis argument                            [rad]

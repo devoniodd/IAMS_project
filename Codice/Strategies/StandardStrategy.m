@@ -93,6 +93,8 @@ TransferOrbit(1,5) = CurrentOrbit(1,5);
 TransferOrbit(1,6) = 0;
 TransferOrbit(1,7) = pi;
 
+Orbit4 = TransferOrbit;
+
 % Velocities 
 pCurrent = CurrentOrbit(1,1)*(1-CurrentOrbit(1,2)^2);
 pFinal = OrbitFinal(1,1)*(1-OrbitFinal(1,2)^2);
@@ -123,3 +125,8 @@ t = [t; t5];
 TotalT = sum(t);
 TotalDV = sum(abs(dV));
 
+%% PLOT
+
+OrbitsToPlot = [Orbit1; Orbit2; Orbit3; Orbit4; OrbitFinal];
+
+drawOrbitapp(OrbitsToPlot,0.01)

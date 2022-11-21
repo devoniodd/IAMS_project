@@ -1,10 +1,40 @@
-function [dV,tof,targetOrbit,currentOrbit] = planeChange(currentOrbit,i2,O2)
+function [dV,tof,currentOrbit,targetOrbit] = planeChange(currentOrbit,i2,O2)
+% planeChange - Change of the orbit's plane 
+%
+% PROTOTYPE:
+% [dV,tof,currentOrbit,targetOrbit] = changePeriapsisArg(currentOrbit,i2,O2)
+%
+% DESCRIPTION:
+% Orbit's plane change using the spherical triangle by giving the function
+% the starting orbit, the final inclination and the final RAAN. 
+%
+% INPUT:
+% initial orbit     [1x7]           Initial orbital parameters                          [N/D]
+% final inclination [1x1]           Final inclination requested                         [rad]
+% final RAAN        [1x1]           Final RAAN requested                                [rad]
+%
+% OUTPUT:
+% delta V           [1x1]           Difference between velocities                       [km/s]
+% time of flight    [1x1]           Time to tranfer from orbit 1 to orbit 2             [s]
+% initial orbit     [1x7]           Initial orbital parameters                          [N/D]
+% final orbit       [1x7]           Final orbital parameters                            [N/D]
 
 %% UTILS
 if ismac
     load("../Data/utils.mat",'mu');
 else
     load("..\Data\utils.mat",'mu');
+end
+
+%% VARIABLES CHECK
+if i2 > 2*pi || i2 < 0
+    warning("The given final inclination wasn't between 0 and 2Pi, it has been automatically wrapped for you")
+    i2 = wrapTo2Pi(i2);
+end
+
+if O2 > 2*pi || O2 < 0
+    warning("The given final RAAN wasn't between 0 and 2Pi, it has been automatically wrapped for you")
+    O2 = wrapTo2Pi(O2);
 end
 
 %% INPUT ORGANIZATION
@@ -44,15 +74,15 @@ u2Sin = (-1)^(id+1) * sin(i1)*sin(dO)/sin(alpha);
 u2 = atan(u2Sin/u2Cos);
 
 theta1 = wrapTo2Pi(u1-o1);
-
 theta2 = theta1;
+
 o2 =wrapTo2Pi(u2 - theta2);
 
-%% dV
+%% VELOCITIES DIFFERENCE
 V1t = sqrt(mu/(a1*(1-e1^2))) * (1 + e1*cos(theta1));
 dV = 2 * V1t * sin(alpha/2);
 
-%% OUTPUT
+%% OUTPUTS
 
 % Current Orbit
 currentOrbit(1,7) = theta1;
