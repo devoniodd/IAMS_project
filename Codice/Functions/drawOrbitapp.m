@@ -106,7 +106,7 @@ for i = 1 : Rows
         [R,V] = orbitalToCar(a,e,inc,Omega,omega,Orbit_path_th(j));
         Orbit_path(:,j) = R;
     end
-    plot3(Orbit(1,:),Orbit(2,:),Orbit(3,:),LineStyle="-",Color=color(i,:));
+    plot3(Orbit(1,:),Orbit(2,:),Orbit(3,:),'LineWidth',1.5,LineStyle="-",Color=color(i,:));
     
     set(h,'XData',manouver(1),'YData',manouver(2),'ZData',manouver(3));
 

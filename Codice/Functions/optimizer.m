@@ -2,7 +2,7 @@ clear all; close all; clc;
 
 %% DATA AND UTILS IMPORT 
 
-addpath(genpath("..\Data\"))
+addpath(genpath("../Data/"))
 load("PForbs.mat");
 load("utils.mat",'mu');
 
@@ -138,7 +138,9 @@ orbits = [a1,e1,i1,O1,o1,orb1(6),2*pi;...
 ((rta+rtp)/2),(abs(rta-rtp)/(rta+rtp)),i1,O1,o1,0,pi;...
 ((rta+rt2p)/2),(abs(rta-rt2p)/(rta+rt2p)),i1,O1,o1,pi,thetai;...
 ((rta+rt2p)/2),(abs(rta-rt2p)/(rta+rt2p)),i2,O2,of,thetaf,(o2-of)/2;...
-((rta+rt2p)/2),(abs(rta-rt2p)/(rta+rt2p)),i2,O2,o2,(o2-of)/2,2*pi;...
+((rta+rt2p)/2),(abs(rta-rt2p)/(rta+rt2p)),i2,O2,o2,-(o2-of)/2,0;...
  a2,e2,i2,O2,o2,0,orb2(6)];
+
+drawOrbitapp(orbits,0.01,0)
 
 
