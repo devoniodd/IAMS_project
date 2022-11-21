@@ -1,12 +1,12 @@
-function [a,e,i,Omega,omega,theta] = carToOrbital(r,v)
+function [a,eNorm,i,Omega,omega,theta] = carToOrbital(r,v)
 % rvToOrbit - Conversion from Cartesian coordinates to Keplerian elements
 %
 % PROTOTYPE:
-% [a,e,i,Omega,omega,theta] = rvToOrbital(r,v)
+% [a,e,i,Omega,omega,theta] = carToOrbital(r,v)
 %
 % DESCRIPTION:
-% Conversion from Cartesian coordinates to Keplerian elements. Angles in
-% radians.
+% Conversion from Cartesian coordinates to Keplerian elements.           
+% Angles are given in radians.
 %
 % INPUT:
 % r                 [3x1]           Position vector                 [km]
