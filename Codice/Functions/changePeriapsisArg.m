@@ -1,4 +1,4 @@
-function [dV,tof,orb1,orb2] = changePeriapsisArg(orb1,domega)
+function [dV,tof,orb1,orb2] = changePeriapsisArg(orb1,omega2)
 % changePeriapsisArg - Change of the Periapsis anomaly  (Secant Maneuver)
 %
 % PROTOTYPE:
@@ -10,7 +10,7 @@ function [dV,tof,orb1,orb2] = changePeriapsisArg(orb1,domega)
 %
 % INPUT:
 % initial orbit     [1x7]           Initial orbital parameters                          [N/D]
-% delta omega       [1x1]           Difference between anomalies                        [rad]
+% final omega       [1x1]           Final periapsis argument                            [rad]
 %
 % OUTPUT:
 % delta V           [1x1]           Difference between velocities                       [km/s]
@@ -25,11 +25,15 @@ else
     load("..\Data\utils.mat",'mu');
 end
 %% VARIABLES CHECK
-if domega > 2*pi || domega < 0
-    domega = wrapTo2Pi(domega);
+if omega2 > 2*pi || omega2 < 0
+    warning("The given final omega wasn't between 0 and 2Pi, it has been automatically wrapped for you")
+    omega2 = wrapTo2Pi(omega2);
 end
 
 %% FINAL ORBIT
+
+% Omega Difference
+domega = wrapTo2Pi(omega2-orb1(1,5));
 
 % Vector creation
 orb2 = zeros(1,7);
@@ -47,7 +51,7 @@ orb2(1,5) = wrapTo2Pi(orb1(1,5) + domega);
 if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
     orb1(1,7) = domega/2;
 else
-    orb1(1,7) = do/2 + pi;
+    orb1(1,7) = domega/2 + pi;
 end
 
 % Initial and Final theta new orbit
