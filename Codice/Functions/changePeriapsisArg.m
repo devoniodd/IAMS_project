@@ -48,17 +48,33 @@ orb2(1,4) = orb1(1,4);
 orb2(1,5) = wrapTo2Pi(orb1(1,5) + domega);
 
 % Final theta
-if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
-    orb1(1,7) = domega/2;
+if domega/2 < pi
+    if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
+        orb1(1,7) = domega/2;
+    else
+        orb1(1,7) = domega/2 + pi;
+    end
 else
-    orb1(1,7) = domega/2 + pi;
+    if orb1(1,6) < domega/2 && orb1(1,6) > domega/2 + pi
+        orb1(1,7) = domega/2;
+    else
+        orb1(1,7) = domega/2 + pi;
+    end
 end
 
 % Initial and Final theta new orbit
-if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
-    orb2(1,6) = 2*pi - domega/2;
+if domega/2 < pi
+    if orb1(1,6) < domega/2 || orb1(1,6) > domega/2 + pi
+        orb2(1,6) = 2*pi - domega/2;
+    else
+        orb2(1,6) = pi - domega/2;
+    end
 else
-    orb2(1,6) = pi - domega/2;
+    if orb1(1,6) < domega/2 && orb1(1,6) > wrapTo2Pi(domega/2 + pi)
+        orb2(1,6) = 2*pi - domega/2;
+    else
+        orb2(1,6) = pi - domega/2;
+    end
 end
 
 orb2(1,7) = nan;

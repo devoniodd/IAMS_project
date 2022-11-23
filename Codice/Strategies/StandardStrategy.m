@@ -56,7 +56,7 @@ OrbitFinal(1,7) = 3.1000;
 
 %% PLANE CHANGE
 
-[dv1,t1,Orbit2,Orbit1] = planeChange(CurrentOrbit,OrbitFinal(1,3),OrbitFinal(1,4));
+[dv1,t1,Orbit1,Orbit2] = planeChange(CurrentOrbit,OrbitFinal(1,3),OrbitFinal(1,4));
 
 dV = [dv1];
 t = [t1];
@@ -129,4 +129,4 @@ TotalDV = sum(abs(dV));
 
 OrbitsToPlot = [Orbit1; Orbit2; Orbit3; Orbit4; OrbitFinal];
 
-drawOrbitapp(OrbitsToPlot,0.01)
+drawOrbitapp(OrbitsToPlot,0.01,0)
