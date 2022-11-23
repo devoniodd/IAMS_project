@@ -1,11 +1,9 @@
 function [v1,v2] = lambert(r1,r2,dt,prograde)
 
 %% UTILS IMPORT 
-if ismac
-    load("../Data/utils.mat",'mu','kDir');
-else
-    load("..\Data\utils.mat",'mu','kDir');
-end
+addpath(genpath("../../Data"));
+addpath(genpath("Stumpff"));
+load("utils.mat",'mu','kDir');
 
 r1Vec = r1;
 r2Vec = r2;
@@ -16,7 +14,7 @@ r2 = norm(r2);
 
 discern = dot(cross(r1Vec,r2Vec),kDir);
 if prograde == 1
-    if discern >= 0
+    if discern > 0
         dTh = acos(dot(r1Vec,r2Vec) / (r1 * r2));
     else
         dTh = 2*pi - acos(dot(r1Vec,r2Vec) / (r1 * r2));
@@ -45,8 +43,8 @@ end
 while F(guess) < 0
     guess = guess + 0.1;
 end
-
-z = fzero(F,guess);
+optnew = optimset('TolX',1e-15);
+z = fzero(F,guess,optnew)
 
 f = 1-y(z)/r1;
 g = A*sqrt(y(z)/mu);

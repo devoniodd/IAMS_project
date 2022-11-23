@@ -13,7 +13,7 @@ function [lat,lon,CAR] = orbitpropagator(O,t_step,warpfactor)
 % 5     Actual orbit propagation
 % 6     Ground tracking?
 
-propOrbit = 1;
+propOrbit = 0;
 groundTrack = 1;
 
 [Rows,Col] = size(O);
@@ -90,11 +90,12 @@ for i = 1 : Rows
         th_vect(j) = th(E_vect(j+1));
     end
     
+    % Sistemo i theta
     if O(i,6) >= 0 && O(i,6) < pi
         th_vect = th_vect + O(i,6);
     end
     if O(i,6) >= pi
-        th_vect = O(i,6) + pi - th_vect(end:-1:1);
+        th_vect = O(i,6) + th_vect(end) - th_vect(end : -1 : 1);
     end
 
     %% Kep2Car for every theta
@@ -230,7 +231,7 @@ nlon = [-180,180];
 nlat =[-85,85];
 geolimits(nlat,nlon);
 hold on;
-geoscatter(lat,lon,1,height,'.');
+geoscatter(lat,lon,5,height,'.');
 colormap parula;
 geobasemap colorterrain;
 end
