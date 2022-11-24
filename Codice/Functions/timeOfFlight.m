@@ -24,6 +24,11 @@ else
     load("..\Data\utils.mat",'mu');
 end
 
+if nargin == 1
+    theta1 = orbit(6);
+    theta2 = orbit(7);
+end
+
 %% INPUT EXTRACTION
 a = orbit(1,1);
 e = orbit(1,2);

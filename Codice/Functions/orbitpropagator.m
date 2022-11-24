@@ -13,7 +13,7 @@ function [lat,lon,CAR] = orbitpropagator(O,t_step,warpfactor)
 % 5     Actual orbit propagation
 % 6     Ground tracking?
 
-propOrbit = 0;
+propOrbit = 1;
 groundTrack = 1;
 
 [Rows,Col] = size(O);
@@ -140,10 +140,12 @@ Erotstep = 360 / (24*60*60) * t_step;
 zaxys = [0,0,1];
 origin = [0,0,0];
 
+
+
 if propOrbit == 1 % Plot specific variables
- 
-figure(Name = 'Orbit propagation');
-ax1 = axes;
+
+OP = figure(Name = 'Orbit propagation'); 
+OrbitP = axes('Parent',OP);
 hold on;
 
 [xE,yE,zE] = ellipsoid(0,0,0,E_radius,E_radius,E_z,nPol);
@@ -193,15 +195,63 @@ colormap jet;
 caxis([minV/100,maxV/100]);
 colorbar location eastoutside Color 'w'; 
 
+end
+
+%% Ground tracking; - da sistemare.
+if groundTrack == 1
+
+GT = figure(Name = 'Ground Tracking');
+GroundT = axes('Parent',GT);
+    TH = zeros(size(CAR(1,:)));
+    PHI = zeros(size(CAR(1,:)));
+    height = zeros(size(CAR(1,:)));
+
+    for i = 1 : length(CAR(1,:))
+        [TH(i),PHI(i),R] = cart2sph(CAR(1,i),CAR(2,i),CAR(3,i));
+        TH(i) = wrapToPi(TH(i) - deg2rad(Erotstep*(i-1)));
+        height(i) = R - E_radius;
+    end
+    lat = rad2deg(PHI); % Cambio da elevazione a azimuth
+    lon = rad2deg(TH);
+
+    % Avoids latching lines
+    skip = zeros(1,length(lon)-1);
+    for i = 1 : length(lon)-1
+        if abs(lon(i+1) - lon(i)) > 170
+           skip(i) = 1;
+       end
+    end
+    hold on;
+    axis equal
+
+    xlim([-180,180]);
+    ylim([-85,85]);
+    xlabel('Longitude','FontSize',15,'Color','k');
+    ylabel('Latitude','FontSize',15,'Color','k');
+    colormap parula;
+    heightmap = parula(length(height));
+    
+    cdata = imread('earth.png');
+    image('CData',flipud(cdata),'XData',[-180,180],'YData',[-90,90])
+end
+
 %% Propagazione dell'orbita;
 tstart = tic;
 for i = 1 : length(CAR(1,:)) - 1
-  animatedline(ax1,CAR(1,i:i+1),CAR(2,i:i+1),CAR(3,i:i+1),'Color', color(:,i));
+  if propOrbit
+  animatedline(OrbitP,CAR(1,i:i+1),CAR(2,i:i+1),CAR(3,i:i+1),'Color', color(:,i));
   
   rotate(Earth,zaxys,Erotstep,origin);
   rotate(Clouds,zaxys,Crotstep,origin);
   set(Speed,'String',"Speed norm:" + CAR(4,i) + "km/s");
   set(Tflight,'String',"Time in flight:" + t(i) + "s");
+  
+
+  if groundTrack == 1 && skip(i) == 0
+      line(GroundT,lon(i:i+1),lat(i:i+1),'Color',heightmap(i,:));
+  end
+  end
+
   drawnow limitrate;
   pause(t_step/warpfactor);
 end
@@ -209,31 +259,5 @@ telapsed = toc(tstart);
 actualwarp = sum(Deltat)/telapsed;
 fprintf('Actual warp factor is: %d \n',actualwarp);
 
-end
-
-%% Ground tracking; - da sistemare.
-if groundTrack == 1
-
-TH = zeros(size(CAR(1,:)));
-PHI = zeros(size(CAR(1,:)));
-height = zeros(size(CAR(1,:)));
-
-for i = 1 : length(CAR(1,:))
-    [TH(i),PHI(i),R] = cart2sph(CAR(1,i),CAR(2,i),CAR(3,i));
-    TH(i) = wrapToPi(TH(i) - deg2rad(Erotstep*(i-1)));
-    height(i) = R - E_radius;
-end
-lat = rad2deg(PHI); % Cambio da elevazione a azimuth
-lon = rad2deg(TH);
-
-figure(Name="Ground tracking");
-nlon = [-180,180];
-nlat =[-85,85];
-geolimits(nlat,nlon);
-hold on;
-geoscatter(lat,lon,5,height,'.');
-colormap parula;
-geobasemap colorterrain;
-end
 
 return;
