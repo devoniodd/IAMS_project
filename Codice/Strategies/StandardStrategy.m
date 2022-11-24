@@ -25,10 +25,10 @@ end
 %% INITIAL AND FINAL ORBITS
 
 % Initial Radius 
-r = [-8048.2861; -4171.3048; 2895.9296];
+ri = [-8048.2861; -4171.3048; 2895.9296];
 
 % Initial Velocity
-V = [1.7540; -5.9910; -1.9520]; 
+Vi = [1.7540; -5.9910; -1.9520]; 
 
 % Initial Orbit 
 Orbit1 = zeros(1,7);

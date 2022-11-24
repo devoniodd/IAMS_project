@@ -19,21 +19,22 @@ clc
 %% DATA AND UTILS IMPORT 
 
 addpath(genpath("../Data/"))
-load("PForbs.mat");
+load("GivenData.mat");
 load("utils.mat",'mu');
 
 %% DATA EXTRACTION
 
-Orbit1 = orb1;
+[a1,e1,i1,O1,o1,thi] = carToOrbital(r1,V1);
+
 FinalOrbit = orb2;
 
 % Starting orbit
-a1 = Orbit1(1);
-e1 = Orbit1(2);
-i1 = Orbit1(3);
-O1 = Orbit1(4);
-o1 = Orbit1(5);
-thi = Orbit1(6);
+Orbit1(1) = a1;
+Orbit1(2) = e1;
+Orbit1(3) = i1;
+Orbit1(4) = O1;
+Orbit1(5) = o1;
+Orbit1(6) = thi;
 r1p = a1*(1-e1);
 r1a = a1*(1+e1);
 p1 = a1*(1-e1^2);
@@ -44,7 +45,6 @@ e2 = FinalOrbit(2);
 i2 = FinalOrbit(3);
 O2 = FinalOrbit(4);
 o2 = FinalOrbit(5);
-FinalOrbit(7) = FinalOrbit(6);
 r2p = a2*(1-e2);
 r2a = a2*(1+e2);
 p2 = a2*(1-e2^2);
@@ -52,7 +52,7 @@ p2 = a2*(1-e2^2);
 
 %% FROM STARTING POINT TO 1st TRANSFER ORBIT
 
-Orbit1(1,7) = 2*pi;
+Orbit1(7) = 0;
 
 % Optimal first transfer orbit
 syms rta
@@ -192,6 +192,10 @@ rs(index)
 
 rta = rs(index);
 
+%% FINAL RADIUS AND VELOCITY VECTORS
+
+[r2,V2] = orbitalToCar(a2,e2,i2,O2,o2,FinalOrbit(7));
+
 %% ORBIT VECTORS CREATION
 
 % Second orbit vector creation
@@ -242,7 +246,7 @@ t1 = timeOfFlight(Orbit1,thi,0);
 t = [t1];
 
 % Time taken to reach second orbit's apocenter
-t2 = pi*sqrt(at^3/mu);
+t2 = pi*sqrt(((rta+rtp)/2)^3/mu);
 t = [t; t2];
 
 % Time taken to reach third orbit's manuever point
