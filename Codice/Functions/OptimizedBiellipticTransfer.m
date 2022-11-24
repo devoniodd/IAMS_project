@@ -26,8 +26,6 @@ load("utils.mat",'mu');
 
 [a1,e1,i1,O1,o1,thi] = carToOrbital(r1,V1);
 
-FinalOrbit = orb2;
-
 % Starting orbit
 Orbit1(1) = a1;
 Orbit1(2) = e1;
@@ -191,6 +189,7 @@ min
 rs(index)
 
 rta = rs(index);
+rt2a = rta;
 
 %% FINAL RADIUS AND VELOCITY VECTORS
 
@@ -200,44 +199,44 @@ rta = rs(index);
 
 % Second orbit vector creation
 Orbit2 = zeros(1,7);
-Orbit2(1,1) = ((rta+rtp)/2);
-Orbit2(1,2) = (abs(rta-rtp)/(rta+rtp));
-Orbit2(1,3) = i1;
-Orbit2(1,4) = O1;
-Orbit2(1,5) = o1;
-Orbit2(1,6) = 0;
-Orbit2(1,7) = pi;
+Orbit2(1) = ((rta+rtp)/2);
+Orbit2(2) = (abs(rta-rtp)/(rta+rtp));
+Orbit2(3) = i1;
+Orbit2(4) = O1;
+Orbit2(5) = o1;
+Orbit2(6) = 0;
+Orbit2(7) = pi;
 
 % Third orbit vector creation
 Orbit3 = zeros(1,7);
-Orbit3(1,1) = ((rta+rt2p)/2);
-Orbit3(1,2) = (abs(rta-rt2p)/(rta+rt2p));
-Orbit3(1,3) = i1;
-Orbit3(1,4) = O1;
-Orbit3(1,5) = o1;
-Orbit3(1,6) = pi;
-Orbit3(1,7) = theta3f;
+Orbit3(1) = ((rta+rt2p)/2);
+Orbit3(2) = (abs(rta-rt2p)/(rta+rt2p));
+Orbit3(3) = i1;
+Orbit3(4) = O1;
+Orbit3(5) = o1;
+Orbit3(6) = pi;
+Orbit3(7) = theta3f;
 
 % Fourth orbit vector creation
 Orbit4 = zeros(1,7);
-Orbit4(1,1) = ((rta+rt2p)/2);
-Orbit4(1,2) = (abs(rta-rt2p)/(rta+rt2p));
-Orbit4(1,3) = i2;
-Orbit4(1,4) = O2;
-Orbit4(1,5) = of;
-Orbit4(1,6) = theta4i;
-Orbit4(1,7) = theta4f;
+Orbit4(1) = ((rta+rt2p)/2);
+Orbit4(2) = (abs(rta-rt2p)/(rta+rt2p));
+Orbit4(3) = i2;
+Orbit4(4) = O2;
+Orbit4(5) = of;
+Orbit4(6) = theta4i;
+Orbit4(7) = theta4f;
 
 
 % Fifth orbit vector creation
 Orbit5 = zeros(1,7);
-Orbit5(1,1) = ((rta+rt2p)/2);
-Orbit5(1,2) = (abs(rta-rt2p)/(rta+rt2p));
-Orbit5(1,3) = i2;
-Orbit5(1,4) = O2;
-Orbit5(1,5) = o2;
-Orbit5(1,6) = theta5i;
-Orbit5(1,7) = 0;
+Orbit5(1) = ((rta+rt2p)/2);
+Orbit5(2) = (abs(rta-rt2p)/(rta+rt2p));
+Orbit5(3) = i2;
+Orbit5(4) = O2;
+Orbit5(5) = o2;
+Orbit5(6) = theta5i;
+Orbit5(7) = 0;
 
 %% TIME TAKEN TO COMPLETE MANEUVER
 
@@ -268,6 +267,35 @@ t = [t; t6];
 
 % Total Time Required
 totalT = sum(t);
+
+%% VELOCITIES DIFFERENCES
+
+% First velocity difference
+v1p = sqrt(mu/p1) * (1+e1);
+vtp = sqrt(mu/(2*rta*rtp/(rta+rtp))) * (1+abs(rta-rtp)/(rta+rtp));
+dV1 = abs(vtp-v1p);
+
+% Second velocity difference
+vta = sqrt(mu/(2*rta*rtp/(rta+rtp))) * (1+abs(rta-rtp)/(rta+rtp)*cos(pi));
+vt2a = sqrt(mu/(2*rt2a*rt2p/(rt2a+rt2p))) * (1+abs(rta-rt2p)/(rta+rt2p)*cos(pi));
+dV2 = abs(vta-vt2a);
+
+% Third velocity difference
+Vt2t = sqrt(mu/(2*rt2a*rt2p/(rt2a+rt2p))) * (1 + abs(rta-rt2p)/(rta+rt2p)*cos(theta3f));
+dV3 = abs(2 * Vt2t * sin(alpha/2));
+
+% Fourth velocity difference
+vt2r = sqrt(mu/(2*rt2a*rt2p/(rt2a+rt2p)))*abs(rta-rt2p)/(rta+rt2p)*sin(do/2);
+dV4 = abs(2*vt2r);
+
+% Fifth velocity difference
+vt2p = sqrt(mu/(2*rt2a*rt2p/(rt2a+rt2p))) * (1+abs(rta-rt2p)/(rta+rt2p));
+v2p = sqrt(mu/p2) * (1+e2);
+dV5 = abs(vt2p-v2p);
+
+% Total Velocity Difference
+dv = [dV1,dV2,dV3,dV4,dV5];
+totalDV = sum(dv);
 
 %% PLOT
 
