@@ -87,18 +87,14 @@ ufCos = (-1)^(id+1) * (cos(i1) - cos(alpha)*cos(i2))/(sin(alpha)*sin(i2));
 ufSin = (-1)^(id+1) * sin(i1)*sin(dO)/sin(alpha);
 uf = atan(ufSin/ufCos);
 
+
+%% PLANE CHANGE
 % Theta of intersection
 thetai = wrapTo2Pi(ui - o1);
-
-% Find most convenient intersection
-if abs(thetai-pi) > pi/2
-    thetai = thetai + pi;
-end
 
 % Periapsis argument 
 thetaf = thetai;
 of = wrapTo2Pi(uf - thetaf);
-
 % Delta V
 Vt2t = sqrt(mu/pt2) * (1 + et2*cos(thetai));
 dV2 = abs(2 * Vt2t * sin(alpha/2));
@@ -125,6 +121,7 @@ dv = dV1+dV2+dV3+dV12+dV4;
 
 % From syms to function handler
 dvFunc = matlabFunction(dv);
+dV2Func = matlabFunction(dV2);
 
 % Radii to consider
 rs = r1a:1:100000;
@@ -134,6 +131,7 @@ min
 rs(index)
 
 rta = rs(index);
+dV2Func(rta)
 orbits = [a1,e1,i1,O1,o1,orb1(6),2*pi;...
 ((rta+rtp)/2),(abs(rta-rtp)/(rta+rtp)),i1,O1,o1,0,pi;...
 ((rta+rt2p)/2),(abs(rta-rt2p)/(rta+rt2p)),i1,O1,o1,pi,thetai;...

@@ -1,4 +1,4 @@
-function [v1,v2] = lambert(r1,r2,dt,prograde)
+function [v1,v2,z] = lambert(r1,r2,dt,prograde)
 
 %% UTILS IMPORT 
 addpath(genpath("../../Data"));
