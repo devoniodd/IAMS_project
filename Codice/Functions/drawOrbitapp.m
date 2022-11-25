@@ -1,4 +1,4 @@
-function drawOrbitapp(O,th_step,showOrbitCompletion)
+function drawOrbitapp(O,th_step,showOrbitCompletion,viewPoint,path)
 % Imput is a matrix containing 5 Parameters for orbital characterization +
 % 2 Parameters with initial and final real anomalies
 % Es O = [a,e,i,O,o,thetaI,thetaF];
@@ -32,7 +32,7 @@ end
 DTheta = sum(O(:,7) - O(:,6));
 Th = (0 : th_step : DTheta);
 
-figure Name 'Orbit plot'
+fig = figure('Name','Orbit Plot');
 hold on;
 axis equal;
 grid on;
@@ -114,4 +114,11 @@ for i = 1 : Rows
     plot3(Orbit_path(1,:),Orbit_path(2,:),Orbit_path(3,:),LineStyle='--',Color=color(i,:));
     end
 end
-
+if exist("viewPoint","var")
+    view(viewPoint);
+end
+if exist("path","var")
+    set(gcf,'Color',[0 0 0]);
+    exportgraphics(gcf,strcat(path,'.png'),"ContentType","image","BackgroundColor","black")
+    saveas(gcf,path,'fig');
+end

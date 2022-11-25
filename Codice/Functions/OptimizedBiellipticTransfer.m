@@ -301,6 +301,6 @@ totalDV = sum(dv);
 
 orbits = [Orbit1; Orbit2; Orbit3; Orbit4; Orbit5; FinalOrbit];
 
-drawOrbitapp(orbits,0.01,0)
-
-
+% drawOrbitapp(orbits,0.01,1,[54,13],'..\..\Images\Optimized\optimized')
+% drawOrbitapp(orbits,0.01,1,[105,13],'..\..\Images\Optimized\optimized2')
+orbitpropagator(orbits,50,10000)
