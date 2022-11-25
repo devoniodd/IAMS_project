@@ -112,11 +112,11 @@ fprintf('\nTotal DV spent is: %f km/s', TotalDV);
 fprintf('\nTime in flight: %f s\n', round(TotalT));
 
 %% PLOT
-Orbiit1(6) = 0;
+
 orbits = [Orbit1; Orbit2; Orbit3; Orbit4; FinalOrbit];
 matrixend = 6;
 n = 1;
 increase = 0;
 
-drawOrbitapp(orbits,0.01,0)
+drawOrbitapp(orbits,0.01,1)
 [lat,lon,CAR] = orbitpropagator(orbits,50,10000);
