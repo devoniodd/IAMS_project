@@ -45,16 +45,17 @@ end
 
 %% ELLIPTICAL ORBIT
 if e > 0 && e < 1
-   
     T = 2*pi/sqrt(mu) * a^(3/2);
 
-    E1 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta1/2));
-    E2 = 2 * atan(sqrt((1-e)/(1+e)) * tan(theta2/2));
+    E = @(theta) (2 * atan(sqrt((1-e)/(1+e)) * tan(theta/2))).*(theta<pi) + pi.*(theta==pi) +(2*pi + 2 * atan(sqrt((1-e)/(1+e)) * tan(theta/2))).*(theta>pi);
 
+    E1 = E(theta1);
+    E2 = E(theta2);
+    
     t1 = sqrt(a^3 / mu) * (E1 - e*sin(E1));
     t2 = sqrt(a^3 / mu) * (E2 - e*sin(E2));
 
-    if t2 >= t1
+    if theta2 >= theta1
         t = t2 - t1;
     else
         t = t2 - t1 + T;

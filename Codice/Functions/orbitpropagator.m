@@ -21,7 +21,7 @@ if Col ~= 7
     error('Matrix O has invalid dimensions');
 end
 
-options = optimoptions('fsolve','Display','off');
+options = optimoptions('fsolve','Display','off','OptimalityTolerance',1e-10);
 
 %% UTILS IMPORT 
 if ismac
@@ -46,7 +46,8 @@ CAR = [];
 %% Cart2Kep for every manouver
 
 for i = 1 : Rows
-    t_inflight = (0 : t_step : Deltat(i+1));
+    start_time = timeOfFlight(O(i,:),0,O(i,6));
+    t_inflight = (start_time : t_step : start_time+Deltat(i+1));
     E_vect = zeros(1,length(t_inflight)+1);
     th_vect = zeros(1,length(t_inflight));
     CAR_t = zeros(4,length(t_inflight));
@@ -67,9 +68,8 @@ for i = 1 : Rows
     timeE = @(E) sqrt(a^3/mu) .* (E - e.*sin(E));
     timeP = @(D) 0.5 * sqrt(p^3 / mu) * (D - D^3 / 3);
     timeH = @(F) sqrt(-a^3 / mu) * (e*sinh(F) - F);
-
     
-    thE = @(E) 2*atan( sqrt((1+e)/(1-e)) * tan(E/2) );
+    thE = @(E) (2 * atan(sqrt((1+e)/(1-e)) * tan(E/2))).*(E<pi) + pi.*(E==pi) +(2*pi + 2 * atan(sqrt((1+e)/(1-e)) * tan(E/2))).*(E>pi);
     thP = @(D) 2*atan(D);
     thH = @(F) 2*atan(sqrt((1+e)/(e-1)) * tanh(F/2));
 
@@ -89,14 +89,8 @@ for i = 1 : Rows
         E_vect(j+1) = fsolve(time_it,E_vect(j),options);
         th_vect(j) = th(E_vect(j+1));
     end
+        
     
-    % Sistemo i theta
-    if O(i,6) >= 0 && O(i,6) < pi
-        th_vect = th_vect + O(i,6);
-    end
-    if O(i,6) >= pi
-        th_vect = O(i,6) + th_vect(end) - th_vect(end : -1 : 1);
-    end
 
     %% Kep2Car for every theta
     for j = 1 : length(t_inflight)
@@ -184,8 +178,8 @@ Crotstep = Erotstep*1.2;
 grid on;
 axis equal;
 
-xlim([min(CAR(1,:)),max(CAR(1,:))]);
-ylim([min(CAR(2,:)),max(CAR(2,:))]);
+xlim([min(CAR(1,:)) - 5000,max(CAR(1,:)) + 5000]);
+ylim([min(CAR(2,:)) - 5000,max(CAR(2,:)) + 5000]);
 zlim([ min([min(CAR(3,:)),E_radius]), max( [max(CAR(3,:)),E_radius] ) ]);
 
 Speed = annotation('textbox', [0, 0.6, 0, 0], 'string', 'Speed:','Color','w');
@@ -246,6 +240,8 @@ for i = 1 : length(CAR(1,:)) - 1
   set(Speed,'String',"Speed norm:" + CAR(4,i) + "km/s");
   set(Tflight,'String',"Time in flight:" + t(i) + "s");
   
+  OrbitP.CameraPosition = [CAR(1,i+1)*10,CAR(2,i+1)*10,40];
+
 
   if groundTrack == 1 && skip(i) == 0
       line(GroundT,lon(i:i+1),lat(i:i+1),'Color',heightmap(i,:));

@@ -55,8 +55,9 @@ DV_tot = DV1+DV2+DV3;
 % TIME CALCULATION
 Dt1 = timeOfFlight(Orbit1);
 Dt2 = timeOfFlight(Orbit2);
+Dt3 = timeOfFlight(O_end);
 
-Time = Dt1 + Dt2;
+Time = Dt1 + Dt2 + Dt3;
 
 fprintf('\nTime optimized manouver 2');
 fprintf('\nTotal DV spent is: %f km/s', DV_tot);
@@ -64,4 +65,4 @@ fprintf('\nTime in flight: %f s\n', round(Time));
 
 % PLOT
 drawOrbitapp(Orbits,0.1);
-[lat,lon] = orbitpropagator(Orbits,50,10000);
+[lat,lon] = orbitpropagator(Orbits,15,10000);
