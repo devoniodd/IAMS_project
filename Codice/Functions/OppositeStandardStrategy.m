@@ -118,5 +118,5 @@ matrixend = 6;
 n = 1;
 increase = 0;
 
-drawOrbitapp(orbits,0.01,1)
-[lat,lon,CAR] = orbitpropagator(orbits,50,10000);
+orbitDraw(orbits)
+%orbitpropagator(orbits,50,1000,[1,0,0],"peri");

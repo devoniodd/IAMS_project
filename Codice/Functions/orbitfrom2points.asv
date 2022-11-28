@@ -90,6 +90,7 @@ if setparameter == "omega"
     rcross = cross(r1,r2);
     if rcross(3) < 0
         rcross = cross(r2,r1);
+        ismorethanpi = 1;
         Dtheta = 2*pi - acos( dot(r1,r2)/(norm(r1)*norm(r2)) );
     else
         Dtheta =  acos( dot(r1,r2)/(norm(r1)*norm(r2)) );
@@ -108,15 +109,11 @@ if setparameter == "omega"
 
     %% TEHTA 1 & THETA2
     if r1(3) >= 0
-        theta1 = acos(dot(N,r1)/norm(r1)) - omega;
+        theta1 = acos(dot(N,r1)/norm(r1));
     else
-        theta1 = 2*pi - acos(dot(N,r1)/norm(r1)) - omega;
+        theta1 = 2*pi - acos(dot(N,r1)/norm(r1));
     end
     theta2 = wrapTo2Pi(theta1+Dtheta);
-
-    %% Inclination;
-
-    i = acos(dot(rcross,kDir));
 
     %% PERIFOCAL PARAMETERS CALCULATION
     r1_norm = norm(r1);

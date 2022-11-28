@@ -84,7 +84,7 @@ fprintf('\nTime in flight: %f s\n', round(Time));
 
 % PLOT
 orbitDraw(Orbits);
-%orbitpropagator(Orbits,15,1000,[1,1,0],"peri");
+%orbitpropagator(Orbits,15,1000,[1,0,1],"dynamic",40);
 
 %% FAST MANOUVER 3 - OPTIMIZATION
 % MANOUVER LIST%
@@ -175,7 +175,7 @@ hold on;
 grid on;
 xlim([0,2*pi]);
 ylim([0,pi/8]);
-zlim([min(min(DV)),max(max(DV))-2]);
+zlim([min(min(DV)),max(max(DV))-0.5]);
 colormap parula;
 s = surf(thetaf,omega,DV,time);
 s.EdgeColor = 'none';
@@ -189,7 +189,9 @@ zlabel('DV [km/s]','interpreter','latex','FontSize', 15);
 
 axis 'auto xy'
 
-colorbar eastoutside Color 'w' TickLabelInterpreter 'latex'
+colorbar eastoutside Color 'w' FontName 'CMU Serif' 
+
+
 
 %% CHOOSING OPTIMAL PARAMETERS
 

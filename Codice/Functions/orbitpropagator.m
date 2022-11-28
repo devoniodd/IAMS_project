@@ -46,7 +46,7 @@ function orbitpropagator(O,t_step,warp,propOptions,cameraOptions,camerapos)
 %|               --> Default = [1,-0.5,0.5]                               |
 %| "dynamic"-->  camerapos  =   [angle] --> Camera elevation       [deg]  |
 %|               --> Default = 30                                         |
-%| "track"  -->  camerapos  =   [x,y,z] --> Camera position        [N/D]  |
+%| "target" -->  camerapos  =   [x,y,z] --> Camera position        [N/D]  |
 %|               --> Default = [1,1,1]                                    |
 %|                                                                        |
 %==========================================================================
@@ -58,7 +58,8 @@ clouds = 1;
 transition = 1;
 Width = 1080;
 Height = 720;
-videoquality = 80;
+hideinfo = 1;
+hideui = 1;
 %==========================================================================
 
 %% DEFINING OPTIONS FOR FSOLVE;
@@ -101,7 +102,7 @@ end
 
 if cameraOptions == "dynamic"
     [sizeimput1,sizeimput2] = size(camerapos);
-    if sizeimput1 ~= 0 || sizeimput2 ~= 0 
+    if sizeimput1 ~= 1 || sizeimput2 ~= 1 
         error('ERROR: invalid imput for elevation');
     end
 elseif nargin == 6
@@ -384,6 +385,7 @@ end
 %==========================================================================
 dynamiccamera = 0;
 dynamictarget = 0;
+if propOrbit
 if cameraOptions == "manual"
     maxDistance = max(R);
     camerapos = camerapos/norm(camerapos)*maxDistance;
@@ -423,6 +425,9 @@ if cameraOptions == "peri"
 end
 
 if cameraOptions == "dynamic"
+    maxD = max([ abs(min(CAR(1,:))),abs(min(CAR(2,:))), max(CAR(1,:)), max(CAR(2,:)) ]);
+    xlim(OrbitP,[-maxD-5000,maxD+5000]);
+    ylim(OrbitP,[-maxD-5000,maxD+5000]);
     dynamiccamera = 1;
     dynamictarget = 0;
     maxDistance = max(R);
@@ -432,8 +437,9 @@ if cameraOptions == "dynamic"
     camerapos(2,:) = sin(wrapTo2Pi(TH'));
     camerapos(3,:) = tan(inclination);
     for j = 1 : length(R)
-        camerapos(:,j) = camerapos(:,j) / norm(camerapos(:,j)) .* maxDistance(j);
+        camerapos(:,j) = camerapos(:,j) / norm(camerapos(:,j)) .* maxDistance;
     end
+
     OrbitP.CameraTarget = [0,0,0];
 end
 
@@ -457,6 +463,7 @@ if cameraOptions == "target"
     end
     OrbitP.CameraPosition = camerapos/norm(camerapos) * maxDistance;
 end
+end
 
 %==========================================================================
 %% ////////////////////////// DYNAMIC PLOT ////////////////////////////////
@@ -465,16 +472,22 @@ wait = t_step/warp;
 
 %==========================================================================
 %/////////////////////////////// VIDEO ////////////////////////////////////
-if capture
+if capture && propOrbit
     OP.Position = [0,0,Width,Height];
     Video = VideoWriter('Orbitprop','Archival');
     %Video.Quality = videoquality;
     Video.FrameRate = ceil(warp/t_step);
-   
-    tb = uitoolbar(OP);
-    tb.Visible = 'off';
 
-    OPcolorbar.Visible = 'off';
+    if hideinfo
+        Speed.Visible = 'off';
+        Tflight.Visible = 'off';
+    end
+   
+    if hideui
+        tb = uitoolbar(OP);
+        tb.Visible = 'off';
+        OPcolorbar.Visible = 'off';
+    end
 
     wait = 0;
 
@@ -522,7 +535,7 @@ if showactualwarpfactor == 1
     fprintf('Actual warp factor is: %d \n',actualwarp);
 end
 
-if capture
+if capture && propOrbit
     close(Video)
     close(OP);
     disp('Video successfully captured and saved');

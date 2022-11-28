@@ -1,19 +1,22 @@
-function drawOrbitapp(O,th_step,showOrbitCompletion,viewPoint,path)
-% Imput is a matrix containing 5 Parameters for orbital characterization +
-% 2 Parameters with initial and final real anomalies
-% Es O = [a,e,i,O,o,thetaI,thetaF];
+function orbitDraw(O,options,path)
+% orbitDraw: display orbit plot and manouvers
+%
+% PROTOTYPE:
+% orbitpropagator( ... )
+%
+% DESCRIPTION:
+% The function allows to draw the orbit.
+%
+% INPUT:
+% O             [nx7]   Orbit matrix                    [N/D]
+% path 
+%
 
-% How it works
-
-if nargin < 3
-    showOrbitCompletion = 1;
-end
-
-if showOrbitCompletion ~= 0 
-    if showOrbitCompletion ~= 1
-        error('Please insert a value for showOrbitCompletion 1 - Yes    0 - No')
-    end
-end
+%================================== DEBUG =================================
+showOrbitCompletion = 1;
+displaymanouvernodes = 1;
+th_step = 0.01;
+%==========================================================================
 
 [Rows,Col] = size(O);
 if Col ~= 7
@@ -92,8 +95,10 @@ for i = 1 : Rows
         Orbit_th = (thi : th_step : thf + 2*pi);
         Orbit_path_th = (thf : th_step : thi);
     end
+
     Orbit = zeros(3,length(Orbit_th));
     Orbit_path = zeros(3,length(Orbit_path_th));
+    
     for j = 1 : length(Orbit_th)
         [R,V] = orbitalToCar(a,e,inc,Omega,omega,Orbit_th(j));
         Orbit(:,j) = R;
@@ -114,11 +119,15 @@ for i = 1 : Rows
     plot3(Orbit_path(1,:),Orbit_path(2,:),Orbit_path(3,:),LineStyle='--',Color=color(i,:));
     end
 end
+
 if exist("viewPoint","var")
     view(viewPoint);
 end
+
 if exist("path","var")
     set(gcf,'Color',[0 0 0]);
     exportgraphics(gcf,strcat(path,'.png'),"ContentType","image","BackgroundColor","black")
     saveas(gcf,path,'fig');
 end
+
+
