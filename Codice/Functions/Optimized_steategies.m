@@ -324,8 +324,8 @@ O_end =      [16720  0.250200000000000  1.11900000000000  0.624500000000000  3.1
 [dV,tof,currentOrbit,targetOrbit] = planeChange(O_start,O_end(3),O_end(4));
 O_start(7)= O_start(6);
 
-n = 200;
-m = 200;
+n = 10;
+m = 10;
 tol = 0.001;
 omega = linspace(0,2*pi,n);
 rmanouver1 = linspace(7,14,m) * 1e3;
@@ -423,9 +423,9 @@ O_end(6) = 0;
 Orbits = [O_start;Orbit1;Orbit2;O_end];
 
 % DV CALCULATION
-DV1 = simpleDVcalculator(O_start,Orbit1);
-DV2 = simpleDVcalculator(Orbit1,Orbit2);
-DV3 = simpleDVcalculator(Orbit2,O_end,100);
+DV1 = simpleDVcalculator(O_start,Orbit1,1000);
+DV2 = simpleDVcalculator(Orbit1,Orbit2,1000);
+DV3 = simpleDVcalculator(Orbit2,O_end,1000);
 
 DV_tot = DV1+DV2+DV3;
 
