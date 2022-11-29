@@ -104,6 +104,8 @@ t = [t; t5];
 
 %% FINAL OUTPUTS
 
+[r2,v2] = orbitalToCar(FinalOrbit(1),FinalOrbit(2),FinalOrbit(3),FinalOrbit(4),FinalOrbit(5),FinalOrbit(7));
+
 TotalT = sum(t);
 TotalDV = sum(abs(dV));
 
