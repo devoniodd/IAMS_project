@@ -104,11 +104,17 @@ t = [t; t5];
 
 %% FINAL OUTPUTS
 
+[r2,v2] = orbitalToCar(FinalOrbit(1),FinalOrbit(2),FinalOrbit(3),FinalOrbit(4),FinalOrbit(5),FinalOrbit(7));
+
 TotalT = sum(t);
 TotalDV = sum(abs(dV));
+
+fprintf('\nStandard strategy');
+fprintf('\nTotal DV spent is: %f km/s', TotalDV);
+fprintf('\nTime in flight: %f s\n', round(TotalT));
 
 %% PLOT
 
 OrbitsToPlot = [Orbit1; Orbit2; Orbit3; Orbit4; FinalOrbit];
 
-drawOrbitapp(OrbitsToPlot,0.01,0)
+orbitDraw(OrbitsToPlot)

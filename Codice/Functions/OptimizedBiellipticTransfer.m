@@ -266,7 +266,7 @@ t6 = timeOfFlight(FinalOrbit,FinalOrbit(1,6),FinalOrbit(1,7));
 t = [t; t6];
 
 % Total Time Required
-totalT = sum(t);
+totalT = sum(t)
 
 %% VELOCITIES DIFFERENCES
 
@@ -295,7 +295,7 @@ dV5 = abs(vt2p-v2p);
 
 % Total Velocity Difference
 dv = [dV1,dV2,dV3,dV4,dV5];
-totalDV = sum(dv);
+totalDV = sum(dv)
 
 %% PLOT
 
@@ -305,4 +305,4 @@ orbits = [Orbit1; Orbit2; Orbit3; Orbit4; Orbit5; FinalOrbit];
 % drawOrbitapp(orbits,0.01,1,[54,13],'..\..\Images\Optimized\optimized')
 % drawOrbitapp(orbits,0.01,1,[105,13],'..\..\Images\Optimized\optimized2')
 orbitDraw(orbits);
-
+orbitpropagator(orbits,50,1000,[1,0,0],"peri");
