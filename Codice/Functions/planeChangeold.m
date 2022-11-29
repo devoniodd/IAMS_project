@@ -58,15 +58,15 @@ end
 
 if pureChange
     thetaf = thetai;
-  if uf >= thetaf
+    if uf >= thetaf
         of = uf - thetaf;
-    else 
+    else
         of = 2*pi + uf - thetaf;
     end
 else
     if uf >= of
         thetaf = uf - of;
-    else 
+    else
         thetaf = 2*pi + uf - of;
     end
 end

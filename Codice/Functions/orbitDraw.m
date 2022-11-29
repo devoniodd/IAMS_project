@@ -105,7 +105,7 @@ for i = 1 : Rows
     end
 
     manouver = Orbit(:,end);
-    h = plot3(nan,nan,nan,'or');
+    h = plot3(nan,nan,nan,'.',MarkerSize=22,Color=color(i,:));
 
     for j = 1 : length(Orbit_path_th)
         [R,V] = orbitalToCar(a,e,inc,Omega,omega,Orbit_path_th(j));

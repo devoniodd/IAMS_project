@@ -44,7 +44,7 @@ while F(guess) < 0
     guess = guess + 0.1;
 end
 optnew = optimset('TolX',1e-15);
-z = fzero(F,guess,optnew)
+z = fzero(F,guess,optnew);
 
 f = 1-y(z)/r1;
 g = A*sqrt(y(z)/mu);
