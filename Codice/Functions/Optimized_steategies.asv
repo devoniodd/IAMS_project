@@ -425,7 +425,7 @@ Orbits = [O_start;Orbit1;Orbit2;O_end];
 % DV CALCULATION
 DV1 = simpleDVcalculator(O_start,Orbit1);
 DV2 = simpleDVcalculator(Orbit1,Orbit2);
-DV3 = simpleDVcalculator(Orbit2,O_end,100);
+DV3 = simpleDVcalculator(Orbit2,O_end);
 
 DV_tot = DV1+DV2+DV3;
 
