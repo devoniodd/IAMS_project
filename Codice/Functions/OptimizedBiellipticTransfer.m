@@ -295,7 +295,7 @@ dV5 = abs(vt2p-v2p);
 
 % Total Velocity Difference
 dv = [dV1,dV2,dV3,dV4,dV5];
-totalDV = sum(dv)
+totalDV = sum(dv);
 
 %% PLOT
 

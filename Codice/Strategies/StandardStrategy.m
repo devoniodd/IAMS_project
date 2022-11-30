@@ -82,13 +82,17 @@ pCurrent = CurrentOrbit(1)*(1-CurrentOrbit(2)^2);
 pFinal = FinalOrbit(1)*(1-FinalOrbit(2)^2);
 PTransfer = (2*rtp*rta)/(rtp+rta);
 
-Vpc = sqrt(mu/pCurrent)*(1+CurrentOrbit(2));
-Vaf = sqrt(mu/pFinal)*(1-FinalOrbit(2));
-Vpt = sqrt(mu/PTransfer)*(1+TransferOrbit(2));
-Vat = sqrt(mu/PTransfer)*(1-TransferOrbit(2));
+%Vpc = sqrt(mu/pCurrent)*(1+CurrentOrbit(2));
+%Vaf = sqrt(mu/pFinal)*(1-FinalOrbit(2));
+%Vpt = sqrt(mu/PTransfer)*(1+TransferOrbit(2));
+%Vat = sqrt(mu/PTransfer)*(1-TransferOrbit(2));
 
-dv3 = Vpt - Vpc;
-dv4 = Vaf - Vat;
+%dv3 = Vpt - Vpc;
+%dv4 = Vaf - Vat;
+
+dv3 = sqrt(2*mu*(1/rtp-1/(2*Orbit4(1))))-sqrt(2*mu*(1/rtp-1/(2*a)));
+dv4 = sqrt(2*mu*(1/rta-1/(2*FinalOrbit(1))))-sqrt(2*mu*(1/rta-1/(2*Orbit4(1))));
+
 dV = [dV; dv3; dv4];
 
 % Transfer orbit time of flight
