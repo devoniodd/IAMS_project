@@ -1,4 +1,4 @@
-function orbitDraw(O,options,path)
+function orbitDraw(O,viewPoint,path)
 % orbitDraw: display orbit plot and manouvers
 %
 % PROTOTYPE:
