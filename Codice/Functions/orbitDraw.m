@@ -13,7 +13,7 @@ function orbitDraw(O,viewPoint,path)
 %
 
 %================================== DEBUG =================================
-showOrbitCompletion = 1;
+showOrbitCompletion = 0;
 displaymanouvernodes = 1;
 th_step = 0.01;
 %==========================================================================
