@@ -60,6 +60,8 @@ Width = 1080;
 Height = 720;
 hideinfo = 1;
 hideui = 1;
+hidecolormapinvideo = 0;
+linewidthplot = 2;
 %==========================================================================
 
 %% DEFINING OPTIONS FOR FSOLVE;
@@ -486,7 +488,9 @@ if capture && propOrbit
     if hideui
         tb = uitoolbar(OP);
         tb.Visible = 'off';
-        OPcolorbar.Visible = 'off';
+        if hidecolormapinvideo
+            OPcolorbar.Visible = 'off';
+        end
     end
 
     wait = 0;
@@ -499,7 +503,7 @@ end
 tstart = tic;
 for i = 1 : length(CAR(1,:)) - 1
     if propOrbit
-        animatedline(OrbitP,CAR(1,i:i+1),CAR(2,i:i+1),CAR(3,i:i+1),'Color', color(:,i));
+        animatedline(OrbitP,CAR(1,i:i+1),CAR(2,i:i+1),CAR(3,i:i+1),'Color', color(:,i),'linewidth', linewidthplot);
   
         rotate(Earth,zaxys,Erotstep,origin);
         if clouds == 1
