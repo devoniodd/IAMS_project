@@ -68,7 +68,8 @@ fprintf('\nTotal DV spent is: %f km/s', DV_tot);
 fprintf('\nTime in flight: %f s\n', round(Time));
 
 orbits = [O_start;Orbit1;Orbit2;O_end];
-orbitDraw(orbits);
+options = ["Ocompletion","Yes","Export",":/:/images/standard/3Imp"];
+orbitDraw(orbits,options);
 
 %% DISPLAYING DV VECTORS AT 3rd MANOUVER NODE
 % SETTING UNIT VECTORS FOR DIRECTIONS
@@ -83,9 +84,9 @@ hDir2 = cross(rDir2,v3_2);
 hDir2 = hDir2/norm(hDir2);
 
 thDir1 = cross(rDir1,hDir1);
-thDir1 = thDir1/norm(thDir1);
+thDir1 = - thDir1/norm(thDir1);
 thDir2 = cross(rDir2,hDir2);
-thDir2 = thDir2/norm(thDir2);
+thDir2 = - thDir2/norm(thDir2);
 
 i = [1,0,0];
 j = [0,1,0];
@@ -106,10 +107,10 @@ Vr2 = sqrt(mu/p2)*O_end(2)*sin(O_end(6));
 
 % Calculating planechange DV
 gamma = acos(cos(Orbit2(3)) * cos(O_end(3)) + sin(Orbit2(3))*sin(O_end(3))*cos(O_end(4)-Orbit2(4)));
-DVchangeplane = thDir1 * Vtheta1*(1 - cos(gamma)) + hDir1 * (Vtheta1*sin(gamma));
+DVchangeplane = - thDir1 * Vtheta1*(1 - cos(gamma)) + hDir1 * (Vtheta1*sin(gamma));
 
 % Calculating change shape and periapsis DV
-DVtheta = - thDir2 * (Vtheta2 - Vtheta1);
+DVtheta = thDir2 * (Vtheta2 - Vtheta1);
 DVrad = - rDir2 * (Vr2);
 
 DVreal = (v3_2-v3_1);
@@ -171,3 +172,4 @@ DVTOT =line([0,DVtotvett(1)],[0,DVtotvett(2)],[0,DVtotvett(3)],'Color','w','line
 labels = legend([DVCP,DVCS,DVCS2,DVTOT,Orbit2,Orbitend],'Change Plane $\Delta$V','Shape/periapsis change tangent $\Delta$V','Shape/periapsis change radial $\Delta$V','Total $\Delta$V','Second Orbit','Final Orbit');
 labels.Interpreter = 'latex';
 labels.TextColor = 'w';
+labels.FontSize = 15;
