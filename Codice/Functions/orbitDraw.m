@@ -1,23 +1,86 @@
-function orbitDraw(O,viewPoint,path)
+function orbitDraw(O,options)
 % orbitDraw: display orbit plot and manouvers
 %
 % PROTOTYPE:
-% orbitpropagator( ... )
+% orbitDraw(O,options)
 %
 % DESCRIPTION:
-% The function allows to draw the orbit.
+% Plot orbits from matrix O in subcession.
 %
 % INPUT:
 % O             [nx7]   Orbit matrix                    [N/D]
-% path 
+% options       [1xn]   Options vector                  [N/D] 
 %
+%
+%================================ OPTIONS =================================
+%|                                                                        |
+%| Options = ["OptionName", "Setting"]                                    |
+%|                                                                        |
+%| SETTINGS:                                                              |
+%|                                                                        |
+%| "Ocompletions"            -->     Toggle orbit completion              |
+%| ["Yes"]   ["No"]                  Default is "Yes"                     |
+%|                                                                        |
+%| "Export"                  -->     Export picture to specified path     |
+%| ["path"]                                                               |
+%|                                                                        |
+%| "setViasual"              -->     Set viewpoint position               |
+%| [ [Azimuth , Elevation] ]                                              |
+%|                                                                        |
+%| "thStep"                  -->     Set Dtheta for discretization        |
+%| [ th_step ]                       Default is 50                        |
+%|                                                                        |
+%==========================================================================
 
-%================================== DEBUG =================================
+%% ================================ DEBUG =================================
 showOrbitCompletion = 0;
-displaymanouvernodes = 1;
 th_step = 0.01;
 %==========================================================================
 
+%% READING IMPUTS
+if nargin >= 2
+if (-1)^(length(options)) > 0
+    for n = 1 : 2 : length(options)
+        % SHOW ORBIT COMPLETION
+        if options(n) == "Ocompletion"
+            if options(n+1) == "Yes" || options(n+1) == "yes"
+                showOrbitCompletion = 1;
+            elseif options(n+1) == "No" || options(n+1) == "no"
+                showOrbitCompletion = 0;
+            else
+                error('Invalid expression after "Ocomplition" ')
+            end
+        end
+        
+        % EXPORT
+        if options(n) == "Export"
+            path = options(n+1);
+        end
+
+        % INITIAL VIEWPOINT
+        if options(n) == "setVisual"
+            [r,c] = size( options(n+1) );
+            if r ~= 1 || c ~= 2
+                error('Invalid expression after "setVisual" ')
+            end
+            viewPoint = options(n+1);
+        end
+
+        % THSTEP
+        if options(n) == "thStep"
+            [r,c] = size( options(n+1) );
+            if r ~= 1 || c ~= 1
+                error('Invalid expression after "thStep" ')
+            end
+            th_step = options(n+1);
+        end
+    end
+else
+    error('Error, some options were not given');
+end
+end
+
+%% STARTING FUNCTIONS
 [Rows,Col] = size(O);
 if Col ~= 7
     error('Matrix O has invalid dimensions');
@@ -34,7 +97,6 @@ end
 
 DTheta = sum(O(:,7) - O(:,6));
 Th = (0 : th_step : DTheta);
-
 fig = figure('Name','Orbit Plot');
 hold on;
 axis equal;
