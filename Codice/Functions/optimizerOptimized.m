@@ -16,7 +16,12 @@ clc
 % onto the final orbit and wait until we reach our destination.
 %
 
+%% PLOT 
+
+plot = 0;
+
 %% DATA AND UTILS IMPORT 
+
 addpath(genpath("../Data"));
 load("PForbs.mat");
 load("utils.mat",'mu');
@@ -162,8 +167,13 @@ orb2(6) = pi;
 
 orbits = [orb1;orb1c1;orbT;orbT2;orb2c2;orb2];
 
-%drawOrbitapp(orbits,0.01,0,[71 11],'../../Images/OptimizedOpt/optimizedOpt');
-orbitDraw(orbits);
+%% DELTA Vs
+
+dV2Func = matlabFunction(dV2);
+dV3Func = matlabFunction(dV3);
+dV4Func = matlabFunction(dV4);
+
+dV = [dV1,dV2Func(rOpt),dV3Func(rOpt),dV4Func(rOpt),dV5];
 
 %% TIME TAKEN TO COMPLETE MANEUVER
 
@@ -195,46 +205,44 @@ TotalT = sum(t);
 
 %% PLOTS
 
-f1 = figure();
-fplot(dvFunc,[r1p 100000],'lineWidth',2);
-xl = xline(rOpt,'--',"$r_{opt}$",'Interpreter','latex');
-xl.FontSize = 18;
-xl.LineWidth = 1;
-xl.LabelVerticalAlignment = "top";
-xl.LabelOrientation = 'horizontal';
-grid on;
-legend("Total dV",'Location',"best",'Interpreter','latex','FontSize',15);
-ylim([4.5 7]);
-xticks([1e4,rOpt,3e4:1e4:10e4]);
-hold off;
-xlabel("\textbf{first transfer orbit apogee radius}",'Interpreter','latex','FontSize',15)
-ylabel("\textbf{total dV}",'Interpreter','latex','FontSize',15)
+if plot
 
-dV2Func = matlabFunction(dV2);
-dV3Func = matlabFunction(dV3);
-dV4Func = matlabFunction(dV4);
+    f1 = figure();
+    fplot(dvFunc,[r1p 100000],'lineWidth',2);
+    xl = xline(rOpt,'--',"$r_{opt}$",'Interpreter','latex');
+    xl.FontSize = 18;
+    xl.LineWidth = 1;
+    xl.LabelVerticalAlignment = "top";
+    xl.LabelOrientation = 'horizontal';
+    grid on;
+    legend("Total dV",'Location',"best",'Interpreter','latex','FontSize',15);
+    ylim([4.5 7]);
+    xticks([1e4,rOpt,3e4:1e4:10e4]);
+    hold off;
+    xlabel("\textbf{first transfer orbit apogee radius}",'Interpreter','latex','FontSize',15)
+    ylabel("\textbf{total dV}",'Interpreter','latex','FontSize',15)
 
-f2 = figure();
-fplot(dV2Func,[r1a 100000],'lineWidth',2);
-hold on;
-fplot(dV3Func,[r1a 100000],'lineWidth',2);
-fplot(dV4Func,[r1a 100000],'lineWidth',2);
-xl = xline(rOpt,'--',"$r_{opt}$",'Interpreter','latex');
-xl.FontSize = 18;
-xl.LineWidth = 1;
-xl.LabelVerticalAlignment = "top";
-xl.LabelOrientation = 'horizontal';
-xticks([1e4,rOpt,3e4:1e4:10e4]);
-grid on;
-xlabel("\textbf{first transfer orbit apogee radius}",'Interpreter','latex','FontSize',15)
-ylabel("\textbf{dV}",'Interpreter','latex','FontSize',15)
-legend("to $1^{st}$ transfer orbit","plane and shape change","$2^{nd}$ tranfer orbit circularization",'Location',"northeast",'Interpreter','latex','FontSize',12.5);
+    f2 = figure();
+    fplot(dV2Func,[r1a 100000],'lineWidth',2);
+    hold on;
+    fplot(dV3Func,[r1a 100000],'lineWidth',2);
+    fplot(dV4Func,[r1a 100000],'lineWidth',2);
+    xl = xline(rOpt,'--',"$r_{opt}$",'Interpreter','latex');
+    xl.FontSize = 18;
+    xl.LineWidth = 1;
+    xl.LabelVerticalAlignment = "top";
+    xl.LabelOrientation = 'horizontal';
+    xticks([1e4,rOpt,3e4:1e4:10e4]);
+    grid on;
+    xlabel("\textbf{first transfer orbit apogee radius}",'Interpreter','latex','FontSize',15)
+    ylabel("\textbf{dV}",'Interpreter','latex','FontSize',15)
+    legend("to $1^{st}$ transfer orbit","plane and shape change","$2^{nd}$ tranfer orbit circularization",'Location',"northeast",'Interpreter','latex','FontSize',12.5);
 
-%% SAVE
+    % Save
+    saveas(f1,"../../Images/OptimizedOpt/totaldV",'png');
+    saveas(f2,"../../Images/OptimizedOpt/partialdVs",'png');
 
-saveas(f1,"../../Images/OptimizedOpt/totaldV",'png');
-saveas(f2,"../../Images/OptimizedOpt/partialdVs",'png');
+    orbitDraw(orbits,[71 11],'../../Images/OptimizedOpt/optimizedOpt');
 
-%% TOTAL dV
+end
 
-dV = [dV1,dV2Func(rOpt),dV3Func(rOpt),dV4Func(rOpt),dV5];

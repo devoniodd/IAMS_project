@@ -17,10 +17,9 @@ load("PForbs.mat");
 %% LAMBERT PARAMETERS
 
 % Starting time of flight
-t = 2000;
+t = 4000;
 
 % Exit parameters
-vLim = 7;
 hMin = 200;
 
 % Utils
@@ -47,7 +46,13 @@ dVlambert = norm(Vt1-V1);
 dVfinal = norm(Vt2-V2);
 dVtot = dVlambert + dVfinal;
 
-while dVtot >= vLim
+dVtotList = [dVtot];
+ts = [t];
+
+it = 1;
+vvs = [Vt1];
+
+while it == 1 || dVtotList(it) < dVtotList(it-1)
     
     % Update
     t = t+10;
@@ -60,8 +65,13 @@ while dVtot >= vLim
     dVlambert = norm(Vt1-V1);
     dVfinal = norm(Vt2-V2);
     dVtot = dVlambert + dVfinal;
+    dVtotList = [dVtotList dVtot];
+    ts = [ts t];
+    vvs = [vvs Vt1];
 
 end
+
+plot(ts,dVtotList,LineWidth=2);
 
 [orbitT(1), orbitT(2), orbitT(3), orbitT(4), orbitT(5), orbitT(6)] = carToOrbital(r1,Vt1);
 [~, ~, ~, ~, ~, orbitT(7)] = carToOrbital(r2,Vt2);
@@ -69,7 +79,3 @@ orbit1(7) = 2*pi;
 orbit2(7) = 2*pi;
 orbit2(6) = 3.1;
 orbits = [orbit1; orbitT; orbit2];
-
-
-
-

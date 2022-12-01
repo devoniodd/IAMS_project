@@ -1,4 +1,4 @@
-function [dV,tof,currentOrbit,targetOrbit] = planeChange(currentOrbit,i2,O2)
+function [dV,tof,currentOrbit,targetOrbit] = planeChange(currentOrbit,i2,O2,node)
 % planeChange - Change of the orbit's plane 
 %
 % PROTOTYPE:
@@ -6,7 +6,8 @@ function [dV,tof,currentOrbit,targetOrbit] = planeChange(currentOrbit,i2,O2)
 %
 % DESCRIPTION:
 % Orbit's plane change using the spherical triangle by giving the function
-% the starting orbit, the final inclination and the final RAAN. 
+% the starting orbit, the final inclination and the final RAAN.
+% MANOUVER IS EXECUTED AT FIRST AVEILABLE POINT
 %
 % INPUT:
 % initial orbit     [1x7]           Initial orbital parameters                          [N/D]
@@ -74,6 +75,16 @@ u2Sin = (-1)^(id+1) * sin(i1)*sin(dO)/sin(alpha);
 u2 = atan(u2Sin/u2Cos);
 
 theta1 = wrapTo2Pi(u1-o1);
+
+if nargin == 4
+    if node == 2
+        theta1 = pi + wrapTo2Pi(u1-o1);
+        u2 = u2+pi;
+    elseif node ~= 1
+        error('Invalid vaue for nodes')
+    end
+end
+
 theta2 = theta1;
 
 o2 =wrapTo2Pi(u2 - theta2);

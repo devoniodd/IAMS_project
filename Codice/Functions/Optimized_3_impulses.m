@@ -85,7 +85,7 @@ maxDV = 10;
 maxtime = 3*1e4;
 tol = 0.001;
 
-parpool(6); % maximum nuber of workers in parfor loop --> parpool(x), x < Core numbers
+parpool(4); % maximum nuber of workers in parfor loop --> parpool(x), x < Core numbers
 %==========================================================================
 
 omega = linspace(-pi,pi,n);     % omega discretization
