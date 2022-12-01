@@ -18,7 +18,7 @@ clc
 
 %% PLOT 
 
-plot = 0;
+plotData = 0;
 
 %% DATA AND UTILS IMPORT 
 
@@ -205,7 +205,7 @@ TotalT = sum(t);
 
 %% PLOTS
 
-if plot
+if plotData
 
     f1 = figure();
     fplot(dvFunc,[r1p 100000],'lineWidth',2);
