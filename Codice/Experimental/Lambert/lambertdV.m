@@ -20,7 +20,6 @@ load("PForbs.mat");
 t = 2000;
 
 % Exit parameters
-vLim = 7;
 hMin = 200;
 
 % Utils
@@ -47,7 +46,11 @@ dVlambert = norm(Vt1-V1);
 dVfinal = norm(Vt2-V2);
 dVtot = dVlambert + dVfinal;
 
-while dVtot >= vLim
+dVtotList = [dVtot];
+
+it = 1;
+
+while it == 1 || dVtotList(it) < dVtotList(it-1)
     
     % Update
     t = t+10;
@@ -60,6 +63,7 @@ while dVtot >= vLim
     dVlambert = norm(Vt1-V1);
     dVfinal = norm(Vt2-V2);
     dVtot = dVlambert + dVfinal;
+    dVtotList = [dVtotList dVtot];
 
 end
 
@@ -69,7 +73,3 @@ orbit1(7) = 2*pi;
 orbit2(7) = 2*pi;
 orbit2(6) = 3.1;
 orbits = [orbit1; orbitT; orbit2];
-
-
-
-
