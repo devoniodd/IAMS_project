@@ -1,4 +1,4 @@
-function [dV,Orbit] = changeSemiMajorApsis(Orbit1,afinal)
+function [dV,Orbit1,Orbit2] = changeSemiMajorApsis(Orbit1,afinal)
 % Simple 1 impulse manouver function that changes orbit dimension.
 
 %% UTILS
@@ -56,5 +56,3 @@ dV = sqrt(mu/p2)*(1-efinal*cos(thetaM)) - sqrt(mu/p1)*(1-e1*cos(thetafinal));
 
 Orbit1(7) = thetaM;
 Orbit2 = [afinal,efinal,Orbit1(3),Orbit1(4),omegaNew,thetafinal,wrapTo2Pi(thetafinal+pi)];
-
-Orbit = [Orbit1;Orbit2];
