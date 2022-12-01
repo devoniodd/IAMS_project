@@ -81,7 +81,7 @@ idx = find(dVtotList<=vLim,1,'first');
 tChosen = ts(idx);
 
 % Find corresponding transfer orbit
-[Vt1,Vt2] = lambertFunc(r1,r2,t,1);
+[Vt1,Vt2] = lambertFunc(r1,r2,tChosen,1);
 
 % Export orbit
 [orbitT(1), orbitT(2), orbitT(3), orbitT(4), orbitT(5), orbitT(6)] = carToOrbital(r1,Vt1);
@@ -96,17 +96,20 @@ orbits = [orb1; orbitT; orb2];
 if plotData
 
     f1 = figure();
+    hold on;
+    set(gca,'color','k','xcolor','w','ycolor','w');
+    set(gcf,'color','k')
     chart = plot(ts,dVtotList,'lineWidth',2);
     grid on;
     xlabel("\textbf{time of flight}",'Interpreter','latex','FontSize',15)
     ylabel("\textbf{total $\Delta V$}",'Interpreter','latex','FontSize',15)
     dt = datatip(chart,tChosen,dVtotList(idx),'SnapToDataVertex','on');
+    exportgraphics(gcf,"../../Images/Lambert/lambert.png","ContentType","image","BackgroundColor","black");
     hold off;
 
     orbitDraw(orbits,[52 15],'../../Images/Lambert/lambertOrbits');
     
     % Save
-    saveas(f1,"../../Images/Lambert/lambert",'png');
 
 end
 
